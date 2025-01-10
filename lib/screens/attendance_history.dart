@@ -4,7 +4,13 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:sizing/sizing.dart';
 
-class AttendanceHistory extends StatelessWidget {
+class AttendanceHistory extends StatefulWidget {
+  @override
+  State<AttendanceHistory> createState() => _AttendanceHistoryState();
+}
+
+class _AttendanceHistoryState extends State<AttendanceHistory>
+    with SingleTickerProviderStateMixin {
   final List<Map<String, String>> attendanceData = [
     {
       'name': 'Ankit Kumar',
@@ -12,7 +18,7 @@ class AttendanceHistory extends StatelessWidget {
       'hostel': 'Hostel 1',
       'status': 'P',
       'image':
-      'https://storage.googleapis.com/a1aa/image/EYuYI5a56hb8FRJU9XZpUMMCQUVkAoMj4KRRpmEIIWvmP3AF.jpg',
+          'https://storage.googleapis.com/a1aa/image/EYuYI5a56hb8FRJU9XZpUMMCQUVkAoMj4KRRpmEIIWvmP3AF.jpg',
     },
     {
       'name': 'Avi Nai',
@@ -20,7 +26,7 @@ class AttendanceHistory extends StatelessWidget {
       'hostel': 'Hostel 1',
       'status': 'A',
       'image':
-      'https://storage.googleapis.com/a1aa/image/gfNOAreeQxT9fQRevoOuCiuf0qkYff7XfTpzPOynOxGM785GoA.jpg',
+          'https://storage.googleapis.com/a1aa/image/gfNOAreeQxT9fQRevoOuCiuf0qkYff7XfTpzPOynOxGM785GoA.jpg',
     },
     {
       'name': 'Ayur Dev',
@@ -28,7 +34,7 @@ class AttendanceHistory extends StatelessWidget {
       'hostel': 'Hostel 1',
       'status': 'P',
       'image':
-      'https://storage.googleapis.com/a1aa/image/KVpuTCfDcvRIBq9krFX4UbdXTsvuJxHH0QMQxJW75EAOfcDUA.jpg',
+          'https://storage.googleapis.com/a1aa/image/KVpuTCfDcvRIBq9krFX4UbdXTsvuJxHH0QMQxJW75EAOfcDUA.jpg',
     },
     {
       'name': 'Basant Kumar',
@@ -36,7 +42,7 @@ class AttendanceHistory extends StatelessWidget {
       'hostel': 'Hostel 1',
       'status': 'P',
       'image':
-      'https://storage.googleapis.com/a1aa/image/GuYwtDgP1AYGH9fgX1Rmgr3QeeH4tfjas0EwDfcXVnefQfcDUA.jpg',
+          'https://storage.googleapis.com/a1aa/image/GuYwtDgP1AYGH9fgX1Rmgr3QeeH4tfjas0EwDfcXVnefQfcDUA.jpg',
     },
     {
       'name': 'Jannat Kaur',
@@ -44,7 +50,7 @@ class AttendanceHistory extends StatelessWidget {
       'hostel': 'Hostel 1',
       'status': 'P',
       'image':
-      'https://storage.googleapis.com/a1aa/image/fKqLXi714JQ5dymhxCPhourjp6zxXMS7XBJC7y9rc2CSfcDUA.jpg',
+          'https://storage.googleapis.com/a1aa/image/fKqLXi714JQ5dymhxCPhourjp6zxXMS7XBJC7y9rc2CSfcDUA.jpg',
     },
     {
       'name': 'Mani Kum',
@@ -52,7 +58,7 @@ class AttendanceHistory extends StatelessWidget {
       'hostel': 'Hostel 1',
       'status': 'P',
       'image':
-      'https://storage.googleapis.com/a1aa/image/CleEOsUnIXziLieguBBIUguujSDVJj3abNBkvsH8jmIie5GoA.jpg',
+          'https://storage.googleapis.com/a1aa/image/CleEOsUnIXziLieguBBIUguujSDVJj3abNBkvsH8jmIie5GoA.jpg',
     },
     {
       'name': 'Seri Sen',
@@ -60,36 +66,109 @@ class AttendanceHistory extends StatelessWidget {
       'hostel': 'Hostel 1',
       'status': 'P',
       'image':
-      'https://storage.googleapis.com/a1aa/image/p2m4cENyfcQrMqfjsQt3rFbFJiSHmIKTudVLipcoJTlf85GoA.jpg',
+          'https://storage.googleapis.com/a1aa/image/p2m4cENyfcQrMqfjsQt3rFbFJiSHmIKTudVLipcoJTlf85GoA.jpg',
     },
   ];
+  String _attendanceOf = 'Student';
+  late TabController _tabController;
+
+  @override
+  void initState() {
+    super.initState();
+    _tabController = TabController(length: 3, vsync: this);
+    _tabController.addListener((){setState(() {});});
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _tabController.dispose();
+   _tabController.removeListener((){});
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustColor.Background,
       appBar: AppBar(
-        backgroundColor: CustColor.Primary,
+        backgroundColor: CustColor.Green,
         foregroundColor: Colors.white,
-        leading: const Icon(Icons.arrow_back_ios_new_rounded),
+        titleSpacing: 0.ss,
+        leading: IconButton(
+            onPressed: () => Navigator.of(context).pop(),
+            icon: const Icon(Icons.keyboard_arrow_left_rounded)),
         title: Text(
           'Attendance History',
-          style: Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white),
+          style: Theme.of(context)
+              .textTheme
+              .bodyMedium!
+              .copyWith(color: Colors.white),
         ),
         actions: [
-          DropdownButton<String>(
-            underline: const SizedBox(),
-            value: 'Student',
-            onChanged: (value) {},
-            items: const [
-              DropdownMenuItem(
-                value: 'Student',
-                child: Text(
-                  'Student',
-                  style: TextStyle(color: Color(0xFF2E7D32)),
-                ),
+          Container(
+              height: 28.ss,
+              padding: EdgeInsets.symmetric(
+                horizontal: 4.ss,
               ),
-            ],
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(6.ss),
+                border:
+                    Border.all(width: 1, color: Colors.white.withOpacity(1)),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: [
+                  Icon(
+                    Icons.person, // Replace with your desired icon
+                    color: Colors.white,
+                    size: 18.ss,
+                  ),
+                  SizedBox(width: 4.ss),
+                  DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                        icon: Icon(
+                          Icons.keyboard_arrow_down_rounded,
+                          size: 18.ss,
+                        ),
+                        iconEnabledColor: Colors.white,
+                        menuWidth: 80.ss,
+                        dropdownColor: CustColor.Green,
+                        borderRadius: BorderRadius.circular(6.ss),
+                        value: _attendanceOf,
+                        items: [
+                          DropdownMenuItem<String>(
+                            value: 'Student',
+                            child: Text(
+                              'Student',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
+                                      fontSize: 11.fss, color: Colors.white),
+                            ),
+                          ),
+                          DropdownMenuItem<String>(
+                            value: 'Wardens',
+                            child: Text(
+                              'Wardens',
+                              style: Theme.of(context)
+                                  .textTheme
+                                  .bodySmall!
+                                  .copyWith(
+                                      fontSize: 11.fss, color: Colors.white),
+                            ),
+                          ),
+                        ],
+                        onChanged: (value) {
+                          setState(() {
+                            _attendanceOf = value!;
+                          });
+                        }),
+                  ),
+                ],
+              )),
+          SizedBox(
+            width: 18.ss,
           ),
         ],
       ),
@@ -104,12 +183,14 @@ class AttendanceHistory extends StatelessWidget {
               children: [
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 20.ss,),
-                    decoration: BoxDecoration(
-                      shape: BoxShape.rectangle,
-                      color: CustColor.Background,
-                      borderRadius: BorderRadius.circular(6.ss)
+                    height: 45.ss,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: 20.ss,
                     ),
+                    decoration: BoxDecoration(
+                        shape: BoxShape.rectangle,
+                        color: CustColor.Background,
+                        borderRadius: BorderRadius.circular(6.ss)),
                     child: DropdownButton<String>(
                       elevation: 2,
                       value: 'Floor 1',
@@ -131,125 +212,148 @@ class AttendanceHistory extends StatelessWidget {
                 SizedBox(width: 10.ss),
                 Expanded(
                   child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 12.ss),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: CustColor.Background,
-                        borderRadius: BorderRadius.circular(6.ss)
-                    ),
-                    child: Row(
-                      children: [
-                        Padding(
-                          padding:EdgeInsets.only(left: 8.ss,right: 4.ss),
-                          child: Icon(Icons.calendar_month,size: 23,color: CustColor.Primary,),
-                        ),
-                        Expanded(flex:2,child: Text('Current Day',style: Theme.of(context).textTheme.bodySmall,))
-                      ],
-                    )
-                  ),
-                ),
-              ],
-            ),
-          ),
-          // Tabs
-          Container(
-            color: Colors.white,
-            padding: const EdgeInsets.symmetric(vertical: 10),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              children: [
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFF2E7D32),
-                    foregroundColor: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Text('All (50)'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE0E0E0),
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Text('Present (45)'),
-                ),
-                ElevatedButton(
-                  onPressed: () {},
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: const Color(0xFFE0E0E0),
-                    foregroundColor: Colors.black,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(20),
-                    ),
-                  ),
-                  child: const Text('Absent (05)'),
-                ),
-              ],
-            ),
-          ),
-          // Attendance List
-          Expanded(
-            child: ListView.builder(
-              padding: const EdgeInsets.all(10),
-              itemCount: attendanceData.length,
-              itemBuilder: (context, index) {
-                final data = attendanceData[index];
-                final isPresent = data['status'] == 'P';
-                return Card(
-                  margin: const EdgeInsets.only(bottom: 10),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: ListTile(
-                    leading: CircleAvatar(
-                      backgroundImage: NetworkImage(data['image']!),
-                    ),
-                    title: Text(
-                      data['name']!,
-                      style: Theme.of(context).textTheme.bodyMedium,
-                    ),
-                    subtitle: Text('${data['room']}\n${data['hostel']}',style: Theme.of(context).textTheme.bodySmall!.copyWith(color: CustColor.Gray),),
-                    trailing: Row(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 8, vertical: 5),
-                          decoration: BoxDecoration(
-                            color: isPresent
-                                ? const Color(0xFFE8F5E9)
-                                : const Color(0xFFFFEBEE),
-                            borderRadius: BorderRadius.circular(5),
-                          ),
-                          child: Text(
-                            isPresent ? 'Present' : 'Absent',
-                            style: TextStyle(
-                              color: isPresent
-                                  ? const Color(0xFF2E7D32)
-                                  : const Color(0xFFD32F2F),
+                      height: 45.ss,
+                      padding: EdgeInsets.symmetric(vertical: 12.ss),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: CustColor.Background,
+                          borderRadius: BorderRadius.circular(6.ss)),
+                      child: Row(
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.only(left: 8.ss, right: 4.ss),
+                            child: Icon(
+                              Icons.calendar_month,
+                              size: 23,
+                              color: CustColor.Green,
                             ),
                           ),
-                        ),
-                        const SizedBox(width: 5),
-                        // IconButton(
-                        //   onPressed: () {},
-                        //   icon: const Icon(Icons.more_vert),
-                        // ),
-                      ],
-                    ),
-                  ),
-                );
-              },
+                          Expanded(
+                              flex: 2,
+                              child: Text(
+                                'Current Day',
+                                style: Theme.of(context).textTheme.bodySmall,
+                              ))
+                        ],
+                      )),
+                ),
+              ],
             ),
           ),
+          // Tab
+          Container(
+            height: kTextTabBarHeight*0.67,
+              padding: EdgeInsets.symmetric(horizontal: 10.ss),
+              child: TabBar(
+                //dividerColor: Colors.transparent,
+                  controller: _tabController,
+                  overlayColor: const WidgetStatePropertyAll(Colors.transparent),
+                  indicatorSize: TabBarIndicatorSize.tab,
+                  unselectedLabelColor: CustColor.Green,
+                  labelColor: Colors.white,
+                  indicator: BoxDecoration(
+                    color: CustColor.Green,
+                    borderRadius: BorderRadius.circular(6.ss),
+                  ),
+                  tabs: <Tab>[
+                Tab(child: Text('All(50)',style: TextStyle(color: _tabController.index == 0 ? Colors.white:Colors.black))),
+                Tab(
+                  child: Text(
+                    'Present(45)',
+                  ),
+                ),
+                Tab(
+                  child: Text(
+                    'Absent(05)',style: TextStyle(color: _tabController.index == 2 ? Colors.white:CustColor.Red),
+                  ),
+                )
+              ],
+              )),
+          // Attendance List
+          Expanded(
+            child: TabBarView(
+              controller: _tabController,
+                children: [
+              _AttendanceList(attendanceData: attendanceData),
+              _AttendanceList(attendanceData: attendanceData),
+              _AttendanceList(attendanceData: attendanceData),
+            ]),
+          )
         ],
+      ),
+    );
+  }
+}
+
+
+class _AttendanceList extends StatefulWidget{
+  final List<Map<String, String>> attendanceData;
+  _AttendanceList({required this.attendanceData});
+  @override
+  State<_AttendanceList> createState() => _AttendanceListState();
+}
+
+class _AttendanceListState extends State<_AttendanceList> {
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListView.builder(
+        padding: const EdgeInsets.all(10),
+        itemCount: widget.attendanceData.length,
+        itemBuilder: (context, index) {
+          final data = widget.attendanceData[index];
+          final isPresent = data['status'] == 'P';
+          return Card(
+            margin: const EdgeInsets.only(bottom: 10),
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(10),
+            ),
+            child: ListTile(
+              leading: CircleAvatar(
+                backgroundImage: NetworkImage(data['image']!),
+              ),
+              title: Text(
+                data['name']!,
+                style: Theme.of(context).textTheme.bodyMedium,
+              ),
+              subtitle: Text(
+                '${data['room']}\n${data['hostel']}',
+                style: Theme.of(context)
+                    .textTheme
+                    .bodySmall!
+                    .copyWith(color: CustColor.Gray),
+              ),
+              trailing: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Container(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 8, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: isPresent
+                          ? const Color(0xFFE8F5E9)
+                          : const Color(0xFFFFEBEE),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
+                    child: Text(
+                      isPresent ? 'Present' : 'Absent',
+                      style: TextStyle(
+                        color: isPresent
+                            ? const Color(0xFF2E7D32)
+                            : const Color(0xFFD32F2F),
+                      ),
+                    ),
+                  ),
+                  const SizedBox(width: 5),
+// IconButton(
+//   onPressed: () {},
+//   icon: const Icon(Icons.more_vert),
+// ),
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }

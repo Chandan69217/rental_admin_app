@@ -20,7 +20,7 @@ class _DashboardState extends State<Dashboard> {
     return Scaffold(
       backgroundColor: CustColor.Background,
       appBar: AppBar(
-        backgroundColor: CustColor.Primary,
+        backgroundColor: CustColor.Green,
         foregroundColor: Colors.white,
         title: Row(
           children: [
@@ -227,7 +227,7 @@ class StatCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(child: Icon(icon, size: 24.ss, color: CustColor.Primary)),
+          Expanded(child: Icon(icon, size: 24.ss, color: CustColor.Green)),
           SizedBox(width: 10.ss),
           Column(
             crossAxisAlignment: CrossAxisAlignment.start,
