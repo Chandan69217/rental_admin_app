@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rental_admin_app/screens/attendance_history.dart';
+import 'package:rental_admin_app/screens/hostel_floors.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:sizing/sizing.dart';
 
@@ -56,6 +57,7 @@ class _DashboardState extends State<Dashboard> {
               child: ListView(
                 children: [
                   HostelCard(
+                    onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: 'Hostel 1',subTitle: 'Boys Hostel'))),
                     title: 'Hostel 1',
                     subtitle: 'Boys Hostel',
                     stats: [
@@ -66,6 +68,7 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                   HostelCard(
+                    onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: 'Hostel 2',subTitle: 'Boys Hostel'))),
                     title: 'Hostel 2',
                     subtitle: 'Boys Hostel',
                     stats: [
@@ -76,6 +79,7 @@ class _DashboardState extends State<Dashboard> {
                     ],
                   ),
                   HostelCard(
+                    onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: 'Hostel 3',subTitle: 'Girls Hostel'))),
                     title: 'Hostel 3',
                     subtitle: 'Girls Hostel',
                     stats: [
@@ -157,54 +161,57 @@ class HostelCard extends StatelessWidget {
   final String title;
   final String subtitle;
   final List<Map<String, dynamic>> stats;
-
-  HostelCard({required this.title, required this.subtitle, required this.stats});
+  final VoidCallback? onTap;
+  HostelCard({required this.title, required this.subtitle, required this.stats,this.onTap});
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 20.ss),
-      padding: EdgeInsets.all(15.ss),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(10.ss),
-        boxShadow: [
-          BoxShadow(
-            color: Colors.black.withOpacity(0.1),
-            blurRadius: 4,
-            offset: Offset(0, 2.ss),
-          ),
-        ],
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(title, style: Theme.of(context).textTheme.bodyMedium),
-              Text(
-                subtitle,
-                style: Theme.of(context).textTheme.bodySmall!.copyWith(color: subtitle == 'Girls Hostel' ? CustColor.Pink : CustColor.Blue),
-              ),
-            ],
-          ),
-          SizedBox(height: 10.ss),
-          GridView.count(crossAxisCount: 2,
-            physics: const NeverScrollableScrollPhysics(),
-            shrinkWrap: true,
-            crossAxisSpacing: 10.ss,
-            mainAxisSpacing: 10.ss,
-            childAspectRatio: 2.5,
-            children: stats.map((stat) {
-              return StatCard(
-                icon: stat['icon'],
-                label: stat['label'],
-                value: stat['value'],
-              );
-            }).toList(),
-          )
-        ],
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        margin: EdgeInsets.only(bottom: 20.ss),
+        padding: EdgeInsets.all(15.ss),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10.ss),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.black.withOpacity(0.1),
+              blurRadius: 4,
+              offset: Offset(0, 2.ss),
+            ),
+          ],
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(title, style: Theme.of(context).textTheme.bodyMedium),
+                Text(
+                  subtitle,
+                  style: Theme.of(context).textTheme.bodySmall!.copyWith(color: subtitle == 'Girls Hostel' ? CustColor.Pink : CustColor.Blue),
+                ),
+              ],
+            ),
+            SizedBox(height: 10.ss),
+            GridView.count(crossAxisCount: 2,
+              physics: const NeverScrollableScrollPhysics(),
+              shrinkWrap: true,
+              crossAxisSpacing: 10.ss,
+              mainAxisSpacing: 10.ss,
+              childAspectRatio: 2.5,
+              children: stats.map((stat) {
+                return StatCard(
+                  icon: stat['icon'],
+                  label: stat['label'],
+                  value: stat['value'],
+                );
+              }).toList(),
+            )
+          ],
+        ),
       ),
     );
   }

@@ -1,6 +1,5 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:sizing/sizing.dart';
 
