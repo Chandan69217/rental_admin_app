@@ -46,7 +46,7 @@ class HostelFloors extends StatelessWidget {
     );
   }
 
-  Widget floorCard(String floor, String name, int rooms, int beds, int keys,{VoidCallback? onTap}) {
+  Widget floorCard(String floor, String name, int rooms, int beds, int keys, {VoidCallback? onTap}) {
     return GestureDetector(
       onTap: onTap,
       child: Card(
@@ -54,54 +54,66 @@ class HostelFloors extends StatelessWidget {
         color: CustColor.Light_Green,
         child: Padding(
           padding: EdgeInsets.all(8.ss),
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Container(
-                padding: EdgeInsets.symmetric(horizontal:  18.ss,vertical: 6.ss),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(10.ss),
-                  color: Colors.white
-                ),
-                child: Text(
-                  floor,
-                  style: const TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black,
+          child: Expanded(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: Container(
+                    padding: EdgeInsets.symmetric(horizontal: 18.ss, vertical: 6.ss),
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(10.ss),
+                      color: Colors.white,
+                    ),
+                    child: Expanded(
+                      child: Text(
+                        floor,
+                        style: const TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.bold,
+                          color: Colors.black,
+                        ),
+                      ),
+                    ),
                   ),
                 ),
-              ),
-              SizedBox(height: 6.ss,),
-              Expanded(
-                child: Row(
-                  children: [
-                    Icon(Icons.person,color: CustColor.Green,size: 18.ss,),
-                    Text(
-                      name,
-                      style: const TextStyle(
-                        fontSize: 14,
-                        color: Colors.black54,
+                SizedBox(height: 6.ss),
+                Expanded(
+                  child: Row(
+                    children: [
+                      Icon(Icons.person, color: CustColor.Green, size: 18.ss),
+                      SizedBox(width: 4.ss), // Adds spacing between the icon and text
+                      Expanded(
+                        flex: 1,
+                        child: Text(
+                          name,
+                          style: const TextStyle(
+                            fontSize: 14,
+                            color: Colors.black54,
+                          ),
+                          overflow: TextOverflow.ellipsis,
+                          maxLines: 1,
+                        ),
                       ),
-                      overflow: TextOverflow.ellipsis,
-                      maxLines: 1,
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              SizedBox(height: 4.ss,),
-              Expanded(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Expanded(child: detailIcon(Icons.door_front_door, rooms.toString())),
-                    Expanded(child: detailIcon(Icons.bed, beds.toString())),
-                    Expanded(child: detailIcon(Icons.vpn_key, keys.toString())),
-                  ],
+                SizedBox(height: 4.ss),
+                Expanded(
+                  flex: 1,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      detailIcon(Icons.door_front_door, rooms.toString()),
+                      detailIcon(Icons.bed, beds.toString()),
+                      detailIcon(Icons.vpn_key, keys.toString()),
+                    ],
+                  ),
                 ),
-              ),
-            ],
+              ],
+            ),
           ),
         ),
       ),

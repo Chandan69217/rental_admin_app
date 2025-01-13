@@ -234,15 +234,17 @@ class StatCard extends StatelessWidget {
       ),
       child: Row(
         children: [
-          Expanded(child: Icon(icon, size: 24.ss, color: CustColor.Green)),
-          SizedBox(width: 10.ss),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Expanded(child: Text(label, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 16, fontWeight: FontWeight.w500,color: CustColor.Gray))),
-              Expanded(child: Text(value, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold))),
-            ],
+          Expanded(flex:1,child: Icon(icon, size: 24.ss, color: CustColor.Green)),
+          Expanded(
+            flex: 2,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Expanded(child: Text(label, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 14, fontWeight: FontWeight.w500,color: CustColor.Gray))),
+                Expanded(child: Text(value, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold))),
+              ],
+            ),
           ),
         ],
       ),
