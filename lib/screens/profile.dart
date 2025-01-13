@@ -1,154 +1,182 @@
 import 'package:flutter/material.dart';
+import 'package:rental_admin_app/screens/dashboard.dart';
+import 'package:rental_admin_app/utilities/cust_color.dart';
+import 'package:sizing/sizing.dart';
 
-class Profile extends StatelessWidget {
+class Profile extends StatefulWidget {
+  @override
+  State<Profile> createState() => _ProfileState();
+}
+
+class _ProfileState extends State<Profile> {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       home: Scaffold(
-        body: Center(
-          child: Container(
-            width: MediaQuery.of(context).size.width * 0.9,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              borderRadius: BorderRadius.circular(10),
-              boxShadow: [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.1),
-                  blurRadius: 10,
-                  spreadRadius: 1,
-                  offset: Offset(0, 5),
+        backgroundColor: CustColor.Background,
+        body: Column(
+          children: [
+            // Top Profile Design
+            Stack(alignment: Alignment.topCenter, children: [
+              Column(
+                children: [
+                  // AppBar Logic
+                  Container(
+                    width: MediaQuery.of(context).size.width,
+                    alignment: Alignment.centerLeft,
+                    color: CustColor.Green,
+                    child: SafeArea(
+                        child: Column(children: [
+                      IconButton(
+                          onPressed: () => Navigator.of(context).pop(),
+                          icon: const Icon(
+                            Icons.keyboard_arrow_left_rounded,
+                            color: Colors.white,
+                          )),
+                      SizedBox(
+                        height: 10.ss,
+                      )
+                    ])),
+                  ),
+                  Container(
+                    padding: EdgeInsets.symmetric(horizontal: 35.ss),
+                    margin: EdgeInsets.only(top: 15.ss),
+                    width: MediaQuery.of(context).size.width,
+                    child: Container(
+                      padding: EdgeInsets.only(bottom: 20.ss),
+                      decoration: BoxDecoration(
+                        color: CustColor.Background,
+                        borderRadius: BorderRadius.circular(20.ss),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 0.5,
+                            spreadRadius: 0.1,
+                          ),
+                        ],
+                      ),
+                      child: Column(
+                        children: [
+                          Align(
+                            alignment: Alignment.topRight,
+                            child: IconButton(
+                              onPressed: () {},
+                              icon: Icon(
+                                Icons.edit,
+                                color: Colors.black,
+                                size: 20.ss,
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: 2.ss,),
+                          Text(
+                            'Chandan Sharma',
+                            style: Theme.of(context)
+                                .textTheme
+                                .bodyLarge!
+                                .copyWith(fontSize: 24),
+                          ),
+                          Text(
+                            'Chhoti Niwash',
+                            style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.normal,color: CustColor.Green),
+                            // TextStyle(
+                            //   fontSize: 16,
+                            //   color: Colors.black54,
+                            // ),
+                          ),
+                          Text(
+                            '+91 8969893457',
+                            style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.normal,color: CustColor.Gray),
+                            // TextStyle(
+                            //   fontSize: 16,
+                            //   color: Colors.black54,
+                            // ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+              Positioned(
+                top: 40.ss,
+                child: Container(
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: CustColor.Background, // Border color
+                      width: 2.0, // Border width
+                    ),),
+                  child: CircleAvatar(
+                    radius: 55.ss,
+                    backgroundImage: AssetImage('assets/icons/profile_pic.webp'),
+                  ),
                 ),
-              ],
-            ),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Stack(
-                  alignment: Alignment.center,
+              ),
+            ]),
+            Container(
+              padding: EdgeInsets.symmetric(horizontal: 20.ss),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  mainAxisSize: MainAxisSize.min,
                   children: [
+                    ButtonsSection(),
                     Container(
-                      height: 120,
-                      color: Colors.green[800],
-                    ),
-                    Positioned(
-                      top: 40,
-                      child: CircleAvatar(
-                        radius: 50,
-                        backgroundImage: NetworkImage('https://placehold.co/100x100'),
+                      width: MediaQuery.of(context).size.width,
+                      margin: EdgeInsets.symmetric(vertical: 20.ss),
+                      padding: EdgeInsets.all(10.ss),
+                      decoration: BoxDecoration(
+                        color: CustColor.Background,
+                        borderRadius: BorderRadius.circular(20.ss),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black.withOpacity(0.1),
+                            blurRadius: 0.5,
+                            spreadRadius: 0.1,
+                          ),
+                        ],
                       ),
-                    ),
-                    Positioned(
-                      top: 80,
-                      right: 20,
-                      child: Icon(
-                        Icons.edit,
-                        color: Colors.white,
-                        size: 20,
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          TextButton(
+                            onPressed: () {},
+                            child: Text('Terms & Conditions'),
+                            style:
+                            TextButton.styleFrom(foregroundColor: CustColor.Gray,
+                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),  // Reduce vertical padding
+                              minimumSize: Size(0, 30),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text('Privacy Policy'),
+                            style: TextButton.styleFrom(foregroundColor: CustColor.Gray,
+                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),  // Reduce vertical padding
+                              minimumSize: Size(0, 10),
+                            ),
+                          ),
+                          TextButton(
+                            onPressed: () {},
+                            child: Text('Contact us'),
+                            style: TextButton.styleFrom(foregroundColor: CustColor.Gray,
+                              padding: EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),  // Reduce vertical padding
+                              minimumSize: Size(0, 30),
+                            ),
+                          ),
+                        ],
                       ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 60),
-                Text(
-                  'Kirit Pandey',
-                  style: TextStyle(
-                    fontSize: 24,
-                    fontWeight: FontWeight.bold,
-                    color: Colors.black87,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  'Hostel Name',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black54,
-                  ),
-                ),
-                SizedBox(height: 5),
-                Text(
-                  '+91 9008007006',
-                  style: TextStyle(
-                    fontSize: 16,
-                    color: Colors.black54,
-                  ),
-                ),
-                SizedBox(height: 20),
-                Wrap(
-                  spacing: 10,
-                  runSpacing: 10,
-                  children: [
-                    featureButton(Icons.person, 'Wardens'),
-                    featureButton(Icons.group, 'Students'),
-                    featureButton(Icons.calendar_today, 'Attendance'),
-                    featureButton(Icons.meeting_room, 'Assign Room', isAssignRoom: true),
-                  ],
-                ),
-                SizedBox(height: 20),
-                Divider(),
-                Column(
-                  children: [
-                    TextButton(
-                      onPressed: () {},
-                      child: Text('Terms & Conditions'),
-                      style: TextButton.styleFrom(foregroundColor: Colors.green[800]),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text('Privacy Policy'),
-                      style: TextButton.styleFrom(foregroundColor: Colors.green[800]),
-                    ),
-                    TextButton(
-                      onPressed: () {},
-                      child: Text('Contact us'),
-                      style: TextButton.styleFrom(foregroundColor: Colors.green[800]),
-                    ),
-                  ],
-                ),
-                SizedBox(height: 20),
-                logoutButton(),
-                SizedBox(height: 10),
-                Text(
-                  'App Version 1.0.0',
-                  style: TextStyle(
-                    fontSize: 12,
-                    color: Colors.grey,
-                  ),
-                ),
-                SizedBox(height: 10),
-              ],
-            ),
-          ),
-        ),
-      ),
-    );
-  }
 
-  Widget featureButton(IconData icon, String label, {bool isAssignRoom = false}) {
-    return Container(
-      width: 150,
-      height: 100,
-      decoration: BoxDecoration(
-        color: isAssignRoom ? Colors.green[50] : Colors.white,
-        border: Border.all(
-          color: isAssignRoom ? Colors.green[800]! : Colors.grey[300]!,
-        ),
-        borderRadius: BorderRadius.circular(10),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Icon(icon, size: 30, color: isAssignRoom ? Colors.green[800] : Colors.black54),
-          SizedBox(height: 5),
-          Text(
-            label,
-            style: TextStyle(
-              fontSize: 14,
-              color: isAssignRoom ? Colors.green[800] : Colors.black54,
+                    ),
+
+
+                  ],
+                )
             ),
-          ),
-        ],
+            logoutButton(),
+          ],
+        ),
       ),
     );
   }
@@ -167,11 +195,11 @@ class Profile extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
-            Icon(Icons.logout, color: Colors.black54, size: 20),
+            Icon(Icons.logout, color: CustColor.Green, size: 20),
             SizedBox(width: 5),
             Text(
               'Log Out',
-              style: TextStyle(fontSize: 16, color: Colors.black54),
+              style: Theme.of(context).textTheme.bodyMedium!.copyWith(fontSize: 16)
             ),
           ],
         ),

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/rendering.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rental_admin_app/screens/attendance_history.dart';
 import 'package:rental_admin_app/screens/hostel_floors.dart';
+import 'package:rental_admin_app/screens/profile.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:sizing/sizing.dart';
 
@@ -25,9 +27,12 @@ class _DashboardState extends State<Dashboard> {
         foregroundColor: Colors.white,
         title: Row(
           children: [
-            CircleAvatar(
-              backgroundImage: NetworkImage('https://placehold.co/40x40'),
-              radius: 20.ss,
+            GestureDetector(
+              onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Profile())),
+              child: CircleAvatar(
+                backgroundImage: NetworkImage('https://placehold.co/40x40'),
+                radius: 20.ss,
+              ),
             ),
             SizedBox(width: 10.ss),
             Text('Chandan Sharma',style:Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white)),
@@ -108,7 +113,7 @@ class ButtonsSection extends StatelessWidget {
       crossAxisCount: 2,
       mainAxisSpacing: 10.ss,
       crossAxisSpacing: 10.ss,
-
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         DashboardButton(label: ' Wardens', icon: FontAwesomeIcons.userShield),
         DashboardButton(label: 'Students', icon: FontAwesomeIcons.userGraduate),
