@@ -53,67 +53,60 @@ class HostelFloors extends StatelessWidget {
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(10.ss)),
         color: CustColor.Light_Green,
         child: Padding(
-          padding: EdgeInsets.all(8.ss),
-          child: Expanded(
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 2,
-                  child: Container(
-                    padding: EdgeInsets.symmetric(horizontal: 18.ss, vertical: 6.ss),
-                    decoration: BoxDecoration(
-                      borderRadius: BorderRadius.circular(10.ss),
-                      color: Colors.white,
-                    ),
-                    child: Expanded(
-                      child: Text(
-                        floor,
-                        style: const TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.bold,
-                          color: Colors.black,
-                        ),
-                      ),
+          padding: const EdgeInsets.all(8.0),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Expanded(
+                flex: 2,
+                child: Container(
+                  padding: const EdgeInsets.symmetric(horizontal: 18, vertical: 6),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(10),
+                    color: Colors.white,
+                  ),
+                  child: Text(
+                    floor,
+                    style: const TextStyle(
+                      fontSize: 18,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
                     ),
                   ),
                 ),
-                SizedBox(height: 6.ss),
-                Expanded(
-                  child: Row(
-                    children: [
-                      Icon(Icons.person, color: CustColor.Green, size: 18.ss),
-                      SizedBox(width: 4.ss), // Adds spacing between the icon and text
-                      Expanded(
-                        flex: 1,
-                        child: Text(
-                          name,
-                          style: const TextStyle(
-                            fontSize: 14,
-                            color: Colors.black54,
-                          ),
-                          overflow: TextOverflow.ellipsis,
-                          maxLines: 1,
-                        ),
+              ),
+              const SizedBox(height: 6),
+              Expanded(
+                child: Row(
+                  children: [
+                    const Icon(Icons.person, color: CustColor.Green, size: 18),
+                    const SizedBox(width: 4), // Adds spacing between the icon and text
+                    Text(
+                      name,
+                      style: const TextStyle(
+                        fontSize: 14,
+                        color: Colors.black54,
                       ),
-                    ],
-                  ),
+                      overflow: TextOverflow.ellipsis,
+                      maxLines: 1,
+                    ),
+                  ],
                 ),
-                SizedBox(height: 4.ss),
-                Expanded(
-                  flex: 1,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      detailIcon(Icons.door_front_door, rooms.toString()),
-                      detailIcon(Icons.bed, beds.toString()),
-                      detailIcon(Icons.vpn_key, keys.toString()),
-                    ],
-                  ),
+              ),
+              const SizedBox(height: 4),
+              Expanded(
+                flex: 1,
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    detailIcon(Icons.door_front_door, rooms.toString()),
+                    detailIcon(Icons.bed, beds.toString()),
+                    detailIcon(Icons.vpn_key, keys.toString()),
+                  ],
                 ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -123,7 +116,7 @@ class HostelFloors extends StatelessWidget {
   Widget detailIcon(IconData icon, String value) {
     return Row(
       children: [
-        Icon(icon, size: 18.ss, color: CustColor.Green),
+        Icon(icon, size: 18, color: CustColor.Green),
         const SizedBox(width: 5),
         Text(
           value,

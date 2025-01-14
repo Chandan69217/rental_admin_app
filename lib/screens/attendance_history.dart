@@ -244,7 +244,6 @@ class _AttendanceHistoryState extends State<AttendanceHistory>
               height: kTextTabBarHeight*0.67,
               padding: EdgeInsets.symmetric(horizontal: 10.ss),
               child: TabBar(
-                //dividerColor: Colors.transparent,
                 controller: _tabController,
                 overlayColor: const WidgetStatePropertyAll(Colors.transparent),
                 indicatorSize: TabBarIndicatorSize.tab,

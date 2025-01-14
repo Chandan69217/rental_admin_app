@@ -3,12 +3,37 @@ import 'package:rental_admin_app/screens/dashboard.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:sizing/sizing.dart';
 
+import '../models/dashboard_data.dart';
+import '../utilities/base64_converter.dart';
+import '../utilities/store_to_cache.dart';
+
 class Profile extends StatefulWidget {
   @override
   State<Profile> createState() => _ProfileState();
 }
 
 class _ProfileState extends State<Profile> {
+  // ImageProvider? profile;
+  // String? userName,mobileNo;
+  @override
+  void initState() {
+    super.initState();
+    // getFromCachedMemory();
+  }
+
+  // Future<void> getFromCachedMemory() async {
+  //   try {
+  //     var cachedProfileData = await getUserData(from: 'dashboardBox', key: 'userProfile');
+  //     if (cachedProfileData != null) {
+  //       DashboardData.profile = base64ToImage(cachedProfileData['hostelAdminProfileImage']);
+  //       DashboardData.na = cachedProfileData['hostelAdminName'];
+  //       mobileNo = cachedProfileData['hostelAdminPhoneNumber'];
+  //       setState((){});
+  //     }
+  //   } catch (exception, trace) {
+  //     print('Error fetching cached data: ${exception.toString()}, Trace: $trace');
+  //   }
+  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -69,9 +94,8 @@ class _ProfileState extends State<Profile> {
                               ),
                             ),
                           ),
-                          SizedBox(height: 2.ss,),
                           Text(
-                            'Chandan Sharma',
+                            DashboardData.Name??'',
                             style: Theme.of(context)
                                 .textTheme
                                 .bodyLarge!
@@ -86,7 +110,7 @@ class _ProfileState extends State<Profile> {
                             // ),
                           ),
                           Text(
-                            '+91 8969893457',
+                            DashboardData.MobileNo??'',
                             style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.normal,color: CustColor.Gray),
                             // TextStyle(
                             //   fontSize: 16,
@@ -99,8 +123,7 @@ class _ProfileState extends State<Profile> {
                   ),
                 ],
               ),
-              Positioned(
-                top: 40.ss,
+              SafeArea(
                 child: Container(
                   decoration: BoxDecoration(
                     shape: BoxShape.circle,
@@ -110,7 +133,7 @@ class _ProfileState extends State<Profile> {
                     ),),
                   child: CircleAvatar(
                     radius: 55.ss,
-                    backgroundImage: AssetImage('assets/icons/profile_pic.webp'),
+                    backgroundImage: DashboardData.profile??AssetImage('assets/icons/dummy_profile.webp'),
                   ),
                 ),
               ),
