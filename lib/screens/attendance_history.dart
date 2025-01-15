@@ -271,6 +271,7 @@ class _AttendanceHistoryState extends State<AttendanceHistory>
           Expanded(
             child: TabBarView(
               controller: _tabController,
+                physics: NeverScrollableScrollPhysics(),
                 children: [
               _AttendanceList(attendanceData: attendanceData),
               _AttendanceList(attendanceData: attendanceData),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rental_admin_app/screens/dashboard.dart';
 import 'package:rental_admin_app/screens/hostel_floors.dart';
+import 'package:rental_admin_app/screens/login_register_screen.dart';
 import 'package:rental_admin_app/screens/profile.dart';
 import 'package:rental_admin_app/screens/room_availability.dart';
 import 'package:rental_admin_app/utilities/theme_data.dart';
@@ -20,12 +22,19 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizingBuilder(
-      builder: () { return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        theme: custThemeData(),
-        home: const Dashboard(),
-      );},
+    return AnnotatedRegion(
+      value: const SystemUiOverlayStyle(
+          statusBarColor: Colors.transparent,
+          statusBarIconBrightness: Brightness.dark
+      ),
+      child: SizingBuilder(
+        builder: () { return MaterialApp(
+          debugShowCheckedModeBanner: false,
+          theme: custThemeData(),
+          home: LoginRegisterScreen()
+          //const Dashboard(),
+        );},
+      ),
     );
   }
 
