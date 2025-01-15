@@ -7,7 +7,10 @@ import 'package:rental_admin_app/screens/hostel_floors.dart';
 import 'package:rental_admin_app/screens/login_register_screen.dart';
 import 'package:rental_admin_app/screens/profile.dart';
 import 'package:rental_admin_app/screens/room_availability.dart';
+import 'package:rental_admin_app/utilities/consts.dart';
 import 'package:rental_admin_app/utilities/theme_data.dart';
+import 'package:rental_admin_app/widgets/cust_circular_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizing/sizing.dart';
 
 
@@ -20,6 +23,12 @@ void main() async{
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
+  Future<bool?> checkLoginStatus() async{
+    final _prefs = await SharedPreferences.getInstance();
+    final bool? _islogin = _prefs.getBool(Consts.IsLogin);
+    return _islogin ?? false;
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnnotatedRegion(
@@ -31,7 +40,19 @@ class MyApp extends StatelessWidget {
         builder: () { return MaterialApp(
           debugShowCheckedModeBanner: false,
           theme: custThemeData(),
-          home: LoginRegisterScreen()
+          home: FutureBuilder(future: checkLoginStatus(),
+          builder: (context,snapshot){
+            if(snapshot.hasData){
+              if(snapshot.data!){
+                return Dashboard();
+              }else{
+                return LoginRegisterScreen();
+              }
+            }else{
+              return Scaffold(body: CustCircularIndicator());
+            }
+          },)
+          //LoginRegisterScreen()
           //const Dashboard(),
         );},
       ),

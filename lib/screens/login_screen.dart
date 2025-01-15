@@ -1,12 +1,19 @@
+import 'dart:convert';
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:google_fonts/google_fonts.dart';
-import 'package:rental_admin_app/screens/signup_screen.dart';
+import 'package:http/http.dart';
+import 'package:rental_admin_app/utilities/is_vaild_email.dart';
+import 'package:rental_admin_app/utilities/urls.dart';
 import 'package:rental_admin_app/widgets/cust_button.dart';
+import 'package:rental_admin_app/widgets/cust_circular_indicator.dart';
 import 'package:rental_admin_app/widgets/cust_textfield.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import '../utilities/consts.dart';
 import '../utilities/cust_color.dart';
+import 'dashboard.dart';
 
 class LoginScreen extends StatefulWidget {
   @override
@@ -19,6 +26,9 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   bool obscureText = true;
   FocusNode emailFocusNode = FocusNode();
   FocusNode passwordFocusNode = FocusNode();
+  bool _isLoading = false;
+  final TextEditingController _emailTextController = TextEditingController();
+  final TextEditingController _passwordTextController = TextEditingController();
 
   @override
   void initState() {
@@ -35,12 +45,13 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
   @override
   void didChangeMetrics() {
     super.didChangeMetrics();
-    if(MediaQuery.of(context).viewInsets.bottom != 0){
+    if(MediaQuery.of(context).viewInsets.bottom !=0){
       if(View.of(context).viewInsets.bottom == 0){
         emailFocusNode.unfocus();
         passwordFocusNode.unfocus();
       }
     }
+
   }
   @override
   Widget build(BuildContext context) {
@@ -53,13 +64,6 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
           const SizedBox(
             height: 20,
           ),
-          // Text(
-          //   'Login',
-          //   style: GoogleFonts.roboto(
-          //     fontSize: 36,
-          //     fontWeight: FontWeight.bold,
-          //   ),
-          // ),
           // Description
           Text(
             'By logging in, you can manage hostels & monitor tenant details, and oversee hostel operations with ease.',
@@ -100,6 +104,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
           ),
           // Email Field
           CustTextField(
+            controller: _emailTextController,
             labelText: 'Email address',
             focusNode: emailFocusNode,
             textInputAction: TextInputAction.next,
@@ -108,6 +113,7 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
           const SizedBox(height: 15),
           // Password Field
           CustTextField(
+            controller: _passwordTextController,
             enableSuffix: true,
             obscureText: obscureText,
             labelText: 'Password',
@@ -120,10 +126,10 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
           ),
           const SizedBox(height: 30),
           // Login Button
-          CustButton(
+          !_isLoading?CustButton(
             label: 'LOGIN',
-            onPressed: () => Navigator.of(context).push(MaterialPageRoute(builder: (context)=>SignupScreen())),
-          ),
+            onPressed: _login
+          ):CustCircularIndicator(),
           Align(
             alignment: Alignment.topRight,
             child: TextButton(
@@ -167,5 +173,93 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
         ],
       )),
     );
+  }
+
+
+  void _login() async {
+    final String emailTxt = _emailTextController.text.trim();
+    final String passwordTxt = _passwordTextController.text.trim();
+    final List<ConnectivityResult> connectivityResult = await Connectivity().checkConnectivity();
+    if (emailTxt.isEmpty) {
+      emailFocusNode.requestFocus();
+      return;
+    }
+    if (passwordTxt.isEmpty) {
+      passwordFocusNode.requestFocus();
+      return;
+    }
+
+    if(dropdownvalue==null){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('please select Admin role!'),
+      ));
+      return;
+    }
+
+    if(!isValidEmail(emailTxt)){
+      emailFocusNode.requestFocus();
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('please enter valid email address'),
+      ));
+      return;
+    }
+
+    if(!(connectivityResult.contains(ConnectivityResult.mobile)||connectivityResult.contains(ConnectivityResult.wifi)||connectivityResult.contains(ConnectivityResult.ethernet))){
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text('No Connections'),
+      ));
+      return;
+    }
+    setState(() {
+      _isLoading = true;
+    });
+
+      try{
+        var uri = Uri.parse(Urls.adminLoginUrl);
+        print('dropdown selected value: $dropdownvalue');
+        var body = json.encode({
+          'hostelAdminEmail': emailTxt,
+          'hostelAdminPassword': passwordTxt,
+          'hostelAdminRole' : dropdownvalue??''
+        });
+
+        var response = await post(uri, body: body, headers: {
+          'Content-Type': 'application/json',
+        });
+
+
+        if (response.statusCode == 200) {
+          var rawData = json.decode(response.body);
+          final pref = await SharedPreferences.getInstance();
+         pref.setBool(Consts.IsLogin, true);
+          pref.setString(Consts.Token, rawData['data']['user']['hostelAdminToken']);
+          pref.setString(Consts.Email, rawData['data']['user']['hostelAdminEmail']);
+          pref.setString(Consts.Admin_role, rawData['data']['user']['hostelAdminRole']);
+          Navigator.of(context).pushAndRemoveUntil(
+            MaterialPageRoute(builder: (context) => Dashboard()),
+                (route) => false,
+          );
+        } else if(response.statusCode == 400){
+          var rawData = json.decode(response.body);
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text(rawData['message']),
+          ));
+        }else if(response.statusCode>400){
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Something went wrong !! ${response.statusCode}'),
+          ));
+        }else{
+          ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+            content: Text('Something went wrong !! ${response.statusCode}'),
+          ));
+        }
+      } catch (exception, trace) {
+        print('Exception : $exception , Trace : $trace');
+      }
+
+    setState(() {
+      _isLoading = false;
+    });
+
   }
 }

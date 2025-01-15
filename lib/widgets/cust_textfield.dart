@@ -48,8 +48,10 @@ class CustTextField extends  StatelessWidget{
   final FocusNode? focusNode;
   final VoidCallback? onTap;
   final bool enableSuffix;
+  final Function(String)? onChanged;
 
   CustTextField({
+    this.onChanged,
     this.controller,
     this.prefixIcon,
     this.enableSuffix = false,
@@ -73,6 +75,7 @@ class CustTextField extends  StatelessWidget{
       ),
       child: TextField(
         focusNode: focusNode,
+        onChanged: onChanged,
         keyboardType: textInputType,
         inputFormatters: textInputFormatter,
         obscureText: obscureText,

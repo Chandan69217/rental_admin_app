@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import 'package:hive/hive.dart';
+import 'package:path_provider/path_provider.dart';
 import 'package:rental_admin_app/screens/dashboard.dart';
+import 'package:rental_admin_app/screens/login_register_screen.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
+import 'package:rental_admin_app/widgets/cust_circular_indicator.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizing/sizing.dart';
-
 import '../models/dashboard_data.dart';
-import '../utilities/base64_converter.dart';
-import '../utilities/store_to_cache.dart';
+
 
 class Profile extends StatefulWidget {
   @override
@@ -13,6 +17,7 @@ class Profile extends StatefulWidget {
 }
 
 class _ProfileState extends State<Profile> {
+  bool _isLoading = false;
   // ImageProvider? profile;
   // String? userName,mobileNo;
   @override
@@ -21,19 +26,6 @@ class _ProfileState extends State<Profile> {
     // getFromCachedMemory();
   }
 
-  // Future<void> getFromCachedMemory() async {
-  //   try {
-  //     var cachedProfileData = await getUserData(from: 'dashboardBox', key: 'userProfile');
-  //     if (cachedProfileData != null) {
-  //       DashboardData.profile = base64ToImage(cachedProfileData['hostelAdminProfileImage']);
-  //       DashboardData.na = cachedProfileData['hostelAdminName'];
-  //       mobileNo = cachedProfileData['hostelAdminPhoneNumber'];
-  //       setState((){});
-  //     }
-  //   } catch (exception, trace) {
-  //     print('Error fetching cached data: ${exception.toString()}, Trace: $trace');
-  //   }
-  // }
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -205,8 +197,8 @@ class _ProfileState extends State<Profile> {
   }
 
   Widget logoutButton() {
-    return GestureDetector(
-      onTap: () {},
+   return _isLoading? CustCircularIndicator(): GestureDetector(
+      onTap: _logout,
       child: Container(
         padding: EdgeInsets.symmetric(vertical: 10),
         width: 250,
@@ -228,5 +220,23 @@ class _ProfileState extends State<Profile> {
         ),
       ),
     );
+  }
+
+  _logout() async{
+    setState(() {
+      _isLoading = true;
+    });
+    var pref = await SharedPreferences.getInstance();
+    if(!await pref.clear()){
+      Fluttertoast.showToast(msg: 'unable to logout');
+      return;
+    }
+    var box = await Hive.openBox('dashboardBox');
+    await box.deleteFromDisk();
+    DashboardData.clearData();
+    setState(() {
+      _isLoading = false;
+    });
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LoginRegisterScreen()), (route)=>false);
   }
 }

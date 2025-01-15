@@ -12,7 +12,9 @@ import 'package:rental_admin_app/screens/profile.dart';
 import 'package:rental_admin_app/utilities/base64_converter.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:rental_admin_app/utilities/urls.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizing/sizing.dart';
+import '../utilities/consts.dart';
 import '../utilities/store_to_cache.dart';
 import '../widgets/cust_circular_indicator.dart';
 
@@ -25,7 +27,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-  static final String token = 'bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJjaGFuZGFuc2hhcm1hNjkyMTdAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiJjaGFuZGFuIiwianRpIjoiMTIzZTZkMGYtMzhkYy00MjZiLTk3ZDMtMTg2ZDMwYjI5M2NlIiwiZXhwIjoyMzY3OTE1MTk1LCJpc3MiOiJzYW5kZWVwIiwiYXVkIjoibmFuZCJ9.Q9FHP0Hyei7cP1TalZBQKXnHHsDkveRG_lEUf5ySaTI';
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +40,8 @@ class _DashboardState extends State<Dashboard> {
       Fluttertoast.showToast(msg: 'No internet connection');
       return;
     }
+    var pref = await SharedPreferences.getInstance();
+    var token = pref.getString(Consts.Token)??'';
     try{
       if(token.isEmpty){
         print('user token not available');
@@ -48,11 +52,11 @@ class _DashboardState extends State<Dashboard> {
 
       final responses = await Future.wait([
         get(getProfileUri,headers: {
-          'authorization': token,
+          'authorization': 'bearer $token',
           'content_type' : 'application/json'
         }),
         get(getHostelListUri,headers: {
-          'authorization': token,
+          'authorization': 'bearer $token',
           'content_type' : 'application/json'
         }),
       ]);
@@ -94,6 +98,8 @@ class _DashboardState extends State<Dashboard> {
         DashboardData.EmailID = cachedProfileData['hostelAdminEmail'];
         DashboardData.Password = cachedProfileData['hostelAdminPassword'];
         DashboardData.Role = cachedProfileData['hostelAdminRole'];
+      }else {
+        print('Error: cachedHostelData is null or not a Map<String, dynamic>.');
       }
 
       var cachedHostelData = await getUserData(from: 'dashboardBox', key: 'hostelList');
