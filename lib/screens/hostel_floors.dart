@@ -1,13 +1,84 @@
+import 'dart:convert';
+
+import 'package:connectivity_plus/connectivity_plus.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:http/http.dart';
+import 'package:rental_admin_app/models/dashboard_data.dart';
 import 'package:rental_admin_app/screens/room_availability.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
+import 'package:rental_admin_app/widgets/cust_circular_indicator.dart';
+import 'package:rental_admin_app/widgets/warning_message.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:sizing/sizing.dart';
+import '../utilities/urls.dart';
 
-class HostelFloors extends StatelessWidget {
+class HostelFloors extends StatefulWidget {
   final String title;
   final String subTitle;
-  HostelFloors({required this.title,required this.subTitle});
+  final int hostel_id;
+  HostelFloors({required this.title,required this.subTitle,required this.hostel_id});
+
+  @override
+  State<HostelFloors> createState() => _HostelFloorsState();
+}
+
+class _HostelFloorsState extends State<HostelFloors> {
+  Future<Map<String,dynamic>> _getDetails() async {
+    var pref = await SharedPreferences.getInstance();
+    final connectionResult = await Connectivity().checkConnectivity();
+    if(!(connectionResult.contains(ConnectivityResult.mobile)||connectionResult.contains(ConnectivityResult.wifi)||connectionResult.contains(ConnectivityResult.ethernet))){
+      return  Future.error({
+        'title': 'No connection',
+        'desc': 'Please check your internet connectivity and try again',
+      });
+    }
+    if(DashboardData.token == null){
+      return Future.error({
+        'title': 'Something went wrong !!',
+        'desc': 'Please restart the app and try again.',
+      });
+    }
+
+    try{
+      final token = DashboardData.token??'';
+     //  Uri uri = Uri.https(Urls.baseUrl, Urls.floorDetailUrl, {'id': '${widget.hostel_id}'});
+      Uri uri = Uri.https(Urls.baseUrl, Urls.floorDetailUrl, {'id': '1'});
+
+      final response =  await get(uri,headers: {
+        'authorization' : 'Bearer ${Urls.token}',
+        'content_type' : 'application/json',
+      });
+
+      if(response.statusCode == 200){
+        final rawBody = jsonDecode(response.body);
+        if(rawBody['status'] == 'Success' && rawBody['hostels']['result']!=null){
+          print('result is available');
+          var result = {
+            'result' : Map<String,dynamic>.from(rawBody['hostels']['result']),
+          };
+          return result;
+        }else{
+          return  Future.error({
+            'title': 'Nothing to show.',
+            'desc': '',
+          });
+        }
+      }else{
+        return  Future.error({
+          'title': 'Something went wrong !!',
+          'desc': 'Please retry after sometime',
+        });
+      }
+    }catch(exception){
+      print('Exception : $exception');
+      return  Future.error({
+        'title': 'Something went wrong !!',
+        'desc': 'Please retry after sometime',
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -21,29 +92,42 @@ class HostelFloors extends StatelessWidget {
           title: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Text(title, style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white)),
-              Text(subTitle, style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white)),
+              Text(widget.title, style: Theme.of(context).textTheme.bodyLarge!.copyWith(color: Colors.white)),
+              Text(widget.subTitle, style: Theme.of(context).textTheme.bodySmall!.copyWith(color: Colors.white)),
             ],
           ),
         ),
-        body: Padding(
-          padding: EdgeInsets.all(20.ss),
-          child: GridView.count(
-            crossAxisCount: 2,
-            crossAxisSpacing: 4,
-            mainAxisSpacing: 4,
-            childAspectRatio: 1.6,
-            children: [
-              floorCard('1st Floor', 'Amit Kumar', 10, 30, 10,onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RoomAvailability(details: {'floor_name':'1st Floor','name':'Amit Kumar','total_rooms':10},)))),
-              floorCard('2nd Floor', 'Ramu Tomar', 10, 32, 8,onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RoomAvailability(details: {'floor_name':'2nd Floor','name':'Ramu Tomar','total_rooms':10},)))),
-              floorCard('3rd Floor', 'Naresh Naidu', 10, 30, 10,onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RoomAvailability(details: {'floor_name':'3rd Floor','name':'Naresh Naidu','total_rooms':10},)))),
-              floorCard('4th Floor', 'Punit Reddy', 10, 22, 18,onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RoomAvailability(details: {'floor_name':'4th Floor','name':'Punit Reddy','total_rooms':10},)))),
-              floorCard('5th Floor', 'Manu Reddy', 9, 24, 16,onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RoomAvailability(details: {'floor_name':'5th Floor','name':'Manu Reddy','total_rooms':10},)))),
-            ],
-          ),
+        body: FutureBuilder( future: _getDetails(),
+          builder: (context,snapshot){
+            if(snapshot.hasData){
+              print('${snapshot.data}');
+             var floors =  List<Map<String,dynamic>>.from(snapshot.data!['result']['floors']).map((item){
+                 return Map<String,dynamic>.from(item);
+             }).toList();
+              return Padding(
+                padding: EdgeInsets.all(20.ss),
+                child: GridView.builder(
+                  itemCount: floors.length,
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2,childAspectRatio: 1.6),
+                  itemBuilder: (BuildContext context, int index) =>
+                    floorCard('${floors[index]['floorName']}', '${widget.title}', floors[index]['totalFloorRoom'], floors[index]['floorTotalBed'], floors[index]['totalBedOccupied'],onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>RoomAvailability(details: {'floor_name':'1st Floor','name':'Amit Kumar','total_rooms':10},)))),
+
+                ),
+              );
+            }else if(snapshot.hasError){
+              var error = snapshot.error as Map<String,String>;
+              return ShowWarning(titile: error['title']!,desc: error['desc']!, onPressed: _refresh,);
+            }else{
+              return Center(child: CustCircularIndicator(),);
+            }
+          }
         ),
       ),
     );
+  }
+
+  _refresh(){
+    setState(() {});
   }
 
   Widget floorCard(String floor, String name, int rooms, int beds, int keys, {VoidCallback? onTap}) {
@@ -80,7 +164,7 @@ class HostelFloors extends StatelessWidget {
               Expanded(
                 child: Row(
                   children: [
-                    const Icon(Icons.person, color: CustColor.Green, size: 18),
+                    const Icon(FontAwesomeIcons.hotel, color: CustColor.Green, size: 16),
                     const SizedBox(width: 4), // Adds spacing between the icon and text
                     Text(
                       name,

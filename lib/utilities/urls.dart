@@ -3,4 +3,7 @@ class Urls {
   static const String getHostelInfoUrl = 'https://appadmin.atharvaservices.com/api/HostelInfo/HostelList';
   static const String adminLoginUrl = 'https://appadmin.atharvaservices.com/api/HostelAdmin/hostelAdminlogin';
   static const String adminRegisterUrl = 'https://appadmin.atharvaservices.com/api/HostelAdmin/HostelAdminRegister';
+  static const String floorDetailUrl = '/api/HostelInfo/FloorDetail';
+  static const String baseUrl = 'appadmin.atharvaservices.com';
+  static const String token = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiJhYmNAZ21haWwuY29tIiwidW5pcXVlX25hbWUiOiIxMjM0NSIsImp0aSI6Ijg0NDEwMjAzLTI4NWUtNGJjMy1iN2M5LWM0MjNhNjJmMDFhYSIsImV4cCI6MjM2NzU3NDg3MiwiaXNzIjoic2FuZGVlcCIsImF1ZCI6Im5hbmQifQ.BrIubGLvOyX3qv9HcZBUt3cRE2P6il68iaSCA4DwcGI';
 }

@@ -52,11 +52,11 @@ class _DashboardState extends State<Dashboard> {
 
       final responses = await Future.wait([
         get(getProfileUri,headers: {
-          'authorization': 'bearer $token',
+          'authorization': 'bearer ${Urls.token}',
           'content_type' : 'application/json'
         }),
         get(getHostelListUri,headers: {
-          'authorization': 'bearer $token',
+          'authorization': 'bearer ${Urls.token}',
           'content_type' : 'application/json'
         }),
       ]);
@@ -89,6 +89,8 @@ class _DashboardState extends State<Dashboard> {
   }
 
   Future<bool> getFromCachedMemory() async {
+    var pref = await SharedPreferences.getInstance();
+    DashboardData.token = pref.getString(Consts.Token);
     try {
       var cachedProfileData = await getUserData(from: 'dashboardBox', key: 'userProfile');
       if (cachedProfileData != null) {
@@ -98,6 +100,7 @@ class _DashboardState extends State<Dashboard> {
         DashboardData.EmailID = cachedProfileData['hostelAdminEmail'];
         DashboardData.Password = cachedProfileData['hostelAdminPassword'];
         DashboardData.Role = cachedProfileData['hostelAdminRole'];
+        DashboardData.user_id = cachedProfileData['id'];
       }else {
         print('Error: cachedHostelData is null or not a Map<String, dynamic>.');
       }
@@ -178,7 +181,7 @@ class _DashboardState extends State<Dashboard> {
                 ListView.builder(itemCount: DashboardData.hostels != null ? DashboardData.hostels!.length:0,
                     itemBuilder: (context,index){
                       return HostelCard(
-                        onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: 'Hostel 1',subTitle: 'Boys Hostel'))),
+                        onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: DashboardData.hostels![index]['hostelName'],subTitle: DashboardData.hostels![index]['hostelType'],hostel_id: DashboardData.hostels![index]['id']??0,))),
                         title: DashboardData.hostels![index]['hostelName'],
                         subtitle: DashboardData.hostels![index]['hostelType'],
                         stats: [
