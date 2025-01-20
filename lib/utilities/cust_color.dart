@@ -12,4 +12,5 @@ class CustColor{
   static const Color Light_Red = Color(0xFFFFEBEE);
   static const Color Red = Color(0xFFD32F2F);
   static const Color Blue_shade1 = Color(0xff008CBA);
+  static const Color Blue_shade2 = Color(0xFF745FFF);
 }

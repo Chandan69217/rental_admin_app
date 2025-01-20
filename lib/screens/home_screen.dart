@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:hive/hive.dart';
 import '../models/dashboard_data.dart';
 import '../utilities/cust_color.dart';
 import '../widgets/cust_circular_indicator.dart';
@@ -183,15 +184,16 @@ class HostelExpensesCard extends StatelessWidget {
                 color: Colors.black87,
               ),
             ),
-            SizedBox(height: 10),
-
+            SizedBox(height: 8),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                StatBox(title: '2000', subtitle: "Today's Collection"),
-                StatBox(title: '2000', subtitle: "Today's Collection"),
+                Expanded(child: StatBox(title: '2000', subtitle: "Today's Collection")),
+                SizedBox(width: 10,),
+                Expanded(child: StatBox(title: '56000', subtitle: "Dues till Date")),
               ],
             ),
+
             // Total Expenses Row
             // _buildExpenseRow(
             //   icon: FontAwesomeIcons.dollarSign,
@@ -199,7 +201,7 @@ class HostelExpensesCard extends StatelessWidget {
             //   value: totalExpenses,
             //   color: Colors.blue,
             // ),
-            SizedBox(height: 8),
+            // SizedBox(height: 8),
 
             // Monthly Expenses Row
             // _buildExpenseRow(
@@ -208,7 +210,7 @@ class HostelExpensesCard extends StatelessWidget {
             //   value: monthlyExpenses,
             //   color: Colors.green,
             // ),
-            SizedBox(height: 8),
+            // SizedBox(height: 8),
 
             // Remaining Budget Row
             // _buildExpenseRow(
@@ -282,21 +284,35 @@ class StatBox extends StatelessWidget {
         borderRadius: BorderRadius.circular(10),
       ),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(
-            title,
-            style: const TextStyle(
-              color: Color(0xFF745FFF),
-              fontSize: 16,
-              fontWeight: FontWeight.bold,
-            ),
+          Container( 
+            padding: EdgeInsets.symmetric(horizontal: 18,vertical: 8),
+              decoration: BoxDecoration(color: Colors.black12,
+                borderRadius: BorderRadius.circular(20)
+              ),
+              
+              child: Image.asset('assets/icons/money.webp',width: 40,height: 40,)
           ),
-          const SizedBox(height: 5),
+          Row(
+            children: [
+              Icon(FontAwesomeIcons.indianRupeeSign,size: 25,color: CustColor.Blue_shade2,),
+              Text(
+                title,
+                style: const TextStyle(
+                  color: CustColor.Blue_shade2,
+                  fontSize: 28,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
+            ],
+          ),
+          // const SizedBox(height: 5),
           Text(
             subtitle,
             textAlign: TextAlign.center,
             style: const TextStyle(
-              color: Color(0xFF745FFF),
+              color: CustColor.Gray,
               fontSize: 12,
             ),
           ),
