@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:sizing/sizing.dart';
 
@@ -68,7 +69,8 @@ class _AttendanceHistoryState extends State<AttendanceHistory>
           'https://storage.googleapis.com/a1aa/image/p2m4cENyfcQrMqfjsQt3rFbFJiSHmIKTudVLipcoJTlf85GoA.jpg',
     },
   ];
-  String _attendanceOf = 'Student';
+  String? _attendanceOf;
+  String? _floor;
   late TabController _tabController;
 
   @override
@@ -89,88 +91,6 @@ class _AttendanceHistoryState extends State<AttendanceHistory>
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: CustColor.Background,
-      appBar: AppBar(
-        backgroundColor: CustColor.Green,
-        foregroundColor: Colors.white,
-        titleSpacing: 0.ss,
-        leading: IconButton(
-            onPressed: () => Navigator.of(context).pop(),
-            icon: const Icon(Icons.keyboard_arrow_left_rounded)),
-        title: Text(
-          'Attendance History',
-          style: Theme.of(context)
-              .textTheme
-              .bodyMedium!
-              .copyWith(color: Colors.white),
-        ),
-        actions: [
-          Container(
-              height: 28.ss,
-              padding: EdgeInsets.symmetric(
-                horizontal: 4.ss,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(6.ss),
-                border:
-                    Border.all(width: 1, color: Colors.white.withOpacity(1)),
-              ),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Icon(
-                    Icons.person, // Replace with your desired icon
-                    color: Colors.white,
-                    size: 18.ss,
-                  ),
-                  SizedBox(width: 4.ss),
-                  DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                        icon: Icon(
-                          Icons.keyboard_arrow_down_rounded,
-                          size: 18.ss,
-                        ),
-                        iconEnabledColor: Colors.white,
-                        menuWidth: 80.ss,
-                        dropdownColor: CustColor.Green,
-                        borderRadius: BorderRadius.circular(6.ss),
-                        value: _attendanceOf,
-                        items: [
-                          DropdownMenuItem<String>(
-                            value: 'Student',
-                            child: Text(
-                              'Student',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(
-                                      fontSize: 11.fss, color: Colors.white),
-                            ),
-                          ),
-                          DropdownMenuItem<String>(
-                            value: 'Wardens',
-                            child: Text(
-                              'Wardens',
-                              style: Theme.of(context)
-                                  .textTheme
-                                  .bodySmall!
-                                  .copyWith(
-                                      fontSize: 11.fss, color: Colors.white),
-                            ),
-                          ),
-                        ],
-                        onChanged: (value) {
-                          setState(() {
-                            _attendanceOf = value!;
-                          });
-                        }),
-                  ),
-                ],
-              )),
-          SizedBox(
-            width: 18.ss,
-          ),
-        ],
-      ),
       body: Column(
         children: [
           // Filter bar
@@ -182,63 +102,173 @@ class _AttendanceHistoryState extends State<AttendanceHistory>
               children: [
                 Expanded(
                   child: Container(
-                    height: 45.ss,
-                    padding: EdgeInsets.symmetric(
-                      horizontal: 20.ss,
-                    ),
-                    decoration: BoxDecoration(
-                        shape: BoxShape.rectangle,
-                        color: CustColor.Background,
-                        borderRadius: BorderRadius.circular(6.ss)),
-                    child: DropdownButton<String>(
-                      elevation: 2,
-                      value: 'Floor 1',
-                      isExpanded: true,
-                      underline: Container(),
-                      borderRadius: BorderRadius.circular(6.ss),
-                      dropdownColor: CustColor.Background,
-                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                      onChanged: (value) {},
-                      items: const [
-                        DropdownMenuItem(
-                          value: 'Floor 1',
-                          child: Text('Floor 1'),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(width: 10.ss),
-                Expanded(
-                  child: Container(
                       height: 45.ss,
-                      padding: EdgeInsets.symmetric(vertical: 12.ss),
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.ss,
+                      ),
                       decoration: BoxDecoration(
                           shape: BoxShape.rectangle,
                           color: CustColor.Background,
                           borderRadius: BorderRadius.circular(6.ss)),
                       child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
                         children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 8.ss, right: 4.ss),
-                            child: Icon(
-                              Icons.calendar_month,
-                              size: 23,
-                              color: CustColor.Green,
+                          Icon(
+                            FontAwesomeIcons.layerGroup, // Replace with your desired icon
+                            color: Colors.black,
+                            size: 18.ss,
+                          ),
+                          SizedBox(width: 10.ss),
+                          DropdownButtonHideUnderline(
+                            child: Expanded(
+                              child: DropdownButton<String>(
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    size: 18.ss,
+                                  ),
+                                  hint: Text('Select floor'),
+                                  iconEnabledColor: Colors.black,
+                                  // menuWidth: 80.ss,
+                                  dropdownColor: CustColor.Background,
+                                  isExpanded: true,
+                                  borderRadius: BorderRadius.circular(6.ss),
+                                  value: _floor,
+                                  style: TextStyle(fontSize: 14,color: Colors.black,overflow: TextOverflow.ellipsis,),
+                                  items: [
+                                    DropdownMenuItem<String>(
+                                      value: 'Floor 1',
+                                      child: Text('Floor 1',),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: 'Floor 2',
+                                      child: Text('Floor 2',),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _floor = value!;
+                                    });
+                                  }),
                             ),
                           ),
-                          Expanded(
-                              flex: 2,
-                              child: Text(
-                                'Current Day',
-                                style: Theme.of(context).textTheme.bodySmall,
-                              ))
+                        ],
+                      )),
+                ),
+                // Expanded(
+                //   child: Container(
+                //     height: 45.ss,
+                //     padding: EdgeInsets.symmetric(
+                //       horizontal: 20.ss,
+                //     ),
+                //     decoration: BoxDecoration(
+                //         shape: BoxShape.rectangle,
+                //         color: CustColor.Background,
+                //         borderRadius: BorderRadius.circular(6.ss)),
+                //     child: Text('data'),
+                //     // DropdownButton<String>(
+                //     //   elevation: 2,
+                //     //   value: 'Floor 1',
+                //     //   isExpanded: true,
+                //     //   underline: Container(),
+                //     //   borderRadius: BorderRadius.circular(6.ss),
+                //     //   dropdownColor: CustColor.Background,
+                //     //   icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                //     //   onChanged: (value) {},
+                //     //   items: const [
+                //     //     DropdownMenuItem(
+                //     //       value: 'Floor 1',
+                //     //       child: Text('Floor 1'),
+                //     //     ),
+                //     //   ],
+                //     // ),
+                //   ),
+                // ),
+                SizedBox(width: 10.ss),
+                // Expanded(
+                //   child: Container(
+                //       height: 45.ss,
+                //       padding: EdgeInsets.symmetric(vertical: 12.ss),
+                //       decoration: BoxDecoration(
+                //           shape: BoxShape.rectangle,
+                //           color: CustColor.Background,
+                //           borderRadius: BorderRadius.circular(6.ss)),
+                //       child: Row(
+                //         children: [
+                //           Padding(
+                //             padding: EdgeInsets.only(left: 8.ss, right: 4.ss),
+                //             child: Icon(
+                //               Icons.calendar_month,
+                //               size: 23,
+                //               color: CustColor.Green,
+                //             ),
+                //           ),
+                //           Expanded(
+                //               flex: 2,
+                //               child: Text(
+                //                 'Current Day',
+                //                 style: Theme.of(context).textTheme.bodySmall,
+                //               ))
+                //         ],
+                //       )),
+                // ),
+                Expanded(
+                  child: Container(
+                      height: 45.ss,
+                      padding: EdgeInsets.symmetric(
+                        horizontal: 20.ss,
+                      ),
+                      decoration: BoxDecoration(
+                          shape: BoxShape.rectangle,
+                          color: CustColor.Background,
+                          borderRadius: BorderRadius.circular(6.ss)),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Icon(
+                            FontAwesomeIcons.hotel, // Replace with your desired icon
+                            color: Colors.black,
+                            size: 18.ss,
+                          ),
+                          SizedBox(width: 10.ss),
+                          DropdownButtonHideUnderline(
+                            child: Expanded(
+                              child: DropdownButton<String>(
+                                  icon: Icon(
+                                    Icons.keyboard_arrow_down_rounded,
+                                    size: 18.ss,
+                                  ),
+                                  hint: Text('Select hostel'),
+                                  iconEnabledColor: Colors.black,
+                                  // menuWidth: 80.ss,
+                                  dropdownColor: CustColor.Background,
+                                  isExpanded: true,
+                                  borderRadius: BorderRadius.circular(6.ss),
+                                  value: _attendanceOf,
+                                  style: TextStyle(fontSize: 14,color: Colors.black,overflow: TextOverflow.ellipsis,),
+                                  items: [
+                                    DropdownMenuItem<String>(
+                                      value: 'Sweta Girls Hostel',
+                                      child: Text('Sweta Girls Hostel',),
+                                    ),
+                                    DropdownMenuItem<String>(
+                                      value: 'Pragya Girls Hostel',
+                                      child: Text('Pragya Girls Hostel',),
+                                    ),
+                                  ],
+                                  onChanged: (value) {
+                                    setState(() {
+                                      _attendanceOf = value!;
+                                    });
+                                  }),
+                            ),
+                          ),
                         ],
                       )),
                 ),
               ],
             ),
           ),
+
           // Tab
           Container(
               height: kTextTabBarHeight*0.67,

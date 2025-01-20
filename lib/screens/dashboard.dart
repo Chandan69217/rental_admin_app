@@ -6,9 +6,11 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:http/http.dart';
 import 'package:rental_admin_app/models/dashboard_data.dart';
+import 'package:rental_admin_app/screens/assign_room.dart';
 import 'package:rental_admin_app/screens/attendance_history.dart';
 import 'package:rental_admin_app/screens/hostel_floors.dart';
 import 'package:rental_admin_app/screens/profile.dart';
+import 'package:rental_admin_app/screens/student_screen.dart';
 import 'package:rental_admin_app/utilities/base64_converter.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:rental_admin_app/utilities/urls.dart';
@@ -17,6 +19,7 @@ import 'package:sizing/sizing.dart';
 import '../utilities/consts.dart';
 import '../utilities/store_to_cache.dart';
 import '../widgets/cust_circular_indicator.dart';
+import 'home_screen.dart';
 
 
 class Dashboard extends StatefulWidget {
@@ -27,7 +30,7 @@ class Dashboard extends StatefulWidget {
 }
 
 class _DashboardState extends State<Dashboard> {
-
+  int _currentIndex = 0;
   @override
   void initState() {
     super.initState();
@@ -47,8 +50,8 @@ class _DashboardState extends State<Dashboard> {
         print('user token not available');
         return;
       }
-      final getProfileUri =  Uri.parse(Urls.getProfileUrl);
-      final getHostelListUri =  Uri.parse(Urls.getHostelInfoUrl);
+      final getProfileUri =  Uri.https(Urls.baseUrl,Urls.getProfileUrl);
+      final getHostelListUri =  Uri.https(Urls.baseUrl,Urls.getHostelInfoUrl);
 
       final responses = await Future.wait([
         get(getProfileUri,headers: {
@@ -131,109 +134,75 @@ class _DashboardState extends State<Dashboard> {
     }
     return true;
   }
-
+  List<Widget> _screens = [];
   @override
   Widget build(BuildContext context) {
     return FutureBuilder(
       future: getFromCachedMemory(),
       builder: (context,snapshot){
+        if(snapshot.hasData){
+         _screens =  [HomeScreen(),StudentScreen(),AttendanceHistory(),AssignRoom()];
+        }
        return Scaffold(
         backgroundColor: CustColor.Background,
         appBar: AppBar(
           backgroundColor: CustColor.Green,
           foregroundColor: Colors.white,
+          titleSpacing: 0,
+          leading: Builder(
+            builder: (BuildContext context) {
+              // Wrap the IconButton inside a Builder to get a proper context
+              return IconButton(
+                onPressed: () => Scaffold.of(context).openDrawer(),
+                icon: Icon(Icons.menu_rounded),
+              );
+            },
+          ),
           title: Row(
             children: [
-              GestureDetector(
-                onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Profile())),
-                child: CircleAvatar(
-                  backgroundImage:
-                   DashboardData.profile??const AssetImage('assets/icons/dummy_profile.webp'),
-                  radius: 20.ss,
-                ),
-              ),
-              SizedBox(width: 10.ss),
-              Text(DashboardData.Name??'',style:Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white)),
+              Text(DashboardData.Name!=null?'Hi ${DashboardData.Name}':'',style:Theme.of(context).textTheme.bodyMedium!.copyWith(color: Colors.white)),
             ],
           ),
           actions: [
-            IconButton(
-              icon: Icon(FontAwesomeIcons.search,size: 20.ss,),
-              onPressed: () {},
+            // IconButton(
+            //   icon: Icon(FontAwesomeIcons.bell,size: 20.ss,),
+            //   onPressed: () {},
+            // ),
+            GestureDetector(
+              onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=> Profile())),
+              child: CircleAvatar(
+                backgroundImage:
+                DashboardData.profile??const AssetImage('assets/icons/dummy_profile.webp'),
+                radius: 20.ss,
+              ),
             ),
-            IconButton(
-              icon: Icon(FontAwesomeIcons.bell,size: 20.ss,),
-              onPressed: () {},
-            ),
+            SizedBox(width: 20.ss),
           ],
         ),
-        body: Padding(
-          padding: EdgeInsets.all(20.ss),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ButtonsSection(),
-              SizedBox(height: 20.ss),
-              Text('Dashboard', style: Theme.of(context).textTheme.bodyLarge),
-              SizedBox(height: 10.ss),
-              Expanded(
-                child: !snapshot.hasData ? Center(child: CustCircularIndicator(),):
-                ListView.builder(itemCount: DashboardData.hostels != null ? DashboardData.hostels!.length:0,
-                    itemBuilder: (context,index){
-                      return HostelCard(
-                        onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: DashboardData.hostels![index]['hostelName'],subTitle: DashboardData.hostels![index]['hostelType'],hostel_id: DashboardData.hostels![index]['id']??0,))),
-                        title: DashboardData.hostels![index]['hostelName'],
-                        subtitle: DashboardData.hostels![index]['hostelType'],
-                        stats: [
-                          {'icon': FontAwesomeIcons.layerGroup, 'label': 'Total Floors', 'value': '${DashboardData.hostels![index]['totalFloor']}'},
-                          {'icon': FontAwesomeIcons.doorOpen, 'label': 'Total Rooms', 'value': '${DashboardData.hostels![index]['totalRoom']}'},
-                          {'icon': FontAwesomeIcons.bed, 'label': 'Total Beds', 'value': '${DashboardData.hostels![index]['totalBed']}'},
-                          {'icon': FontAwesomeIcons.bed, 'label': 'Unoccupied', 'value': 'N/A'},
-                        ],
-                      );
-                    }
-                ),
-                // ListView(
-                //   children: [
-                //     HostelCard(
-                //       onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: 'Hostel 1',subTitle: 'Boys Hostel'))),
-                //       title: 'Hostel 1',
-                //       subtitle: 'Boys Hostel',
-                //       stats: [
-                //         {'icon': FontAwesomeIcons.layerGroup, 'label': 'Total Floors', 'value': '5'},
-                //         {'icon': FontAwesomeIcons.doorOpen, 'label': 'Total Rooms', 'value': '50'},
-                //         {'icon': FontAwesomeIcons.bed, 'label': 'Total Beds', 'value': '200'},
-                //         {'icon': FontAwesomeIcons.bed, 'label': 'Unoccupied', 'value': '34'},
-                //       ],
-                //     ),
-                //     HostelCard(
-                //       onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: 'Hostel 2',subTitle: 'Boys Hostel'))),
-                //       title: 'Hostel 2',
-                //       subtitle: 'Boys Hostel',
-                //       stats: [
-                //         {'icon': FontAwesomeIcons.layerGroup, 'label': 'Total Floors', 'value': '4'},
-                //         {'icon': FontAwesomeIcons.doorOpen, 'label': 'Total Rooms', 'value': '40'},
-                //         {'icon': FontAwesomeIcons.bed, 'label': 'Total Beds', 'value': '160'},
-                //         {'icon': FontAwesomeIcons.bed, 'label': 'Unoccupied', 'value': '21'},
-                //       ],
-                //     ),
-                //     HostelCard(
-                //       onTap: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: 'Hostel 3',subTitle: 'Girls Hostel'))),
-                //       title: 'Hostel 3',
-                //       subtitle: 'Girls Hostel',
-                //       stats: [
-                //         {'icon': FontAwesomeIcons.layerGroup, 'label': 'Total Floors', 'value': '4'},
-                //         {'icon': FontAwesomeIcons.doorOpen, 'label': 'Total Rooms', 'value': '40'},
-                //         {'icon': FontAwesomeIcons.bed, 'label': 'Total Beds', 'value': '160'},
-                //         {'icon': FontAwesomeIcons.bed, 'label': 'Unoccupied', 'value': '21'},
-                //       ],
-                //     ),
-                //   ],
-                // ),
-              ),
-            ],
-          ),
-        ),
+        body: !snapshot.hasData ?Center(child: CustCircularIndicator()) : _screens[_currentIndex],
+         drawer: Drawer(backgroundColor: CustColor.Background,
+           shape: RoundedRectangleBorder(),
+           child: Column(),),
+         bottomNavigationBar: BottomNavigationBar(
+           backgroundColor: CustColor.Background,
+             type: BottomNavigationBarType.fixed,
+             selectedFontSize: 12,
+             unselectedFontSize: 12,
+             selectedItemColor: CustColor.Green,
+             unselectedItemColor: CustColor.Gray,
+             onTap: (selectedIndex){
+               setState(() {
+                 _currentIndex = selectedIndex;
+               });
+             },
+             currentIndex: _currentIndex,
+             items:  <BottomNavigationBarItem>[
+           BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.home), label: 'Home'),
+               BottomNavigationBarItem(icon: Icon( FontAwesomeIcons.userGraduate), label: 'Student'),
+           BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.clipboardList), label: 'Attendance'),
+           BottomNavigationBarItem(icon: Icon(FontAwesomeIcons.plusCircle), label: 'Assign Room'),
+
+         ]),
       );
       }
     );
@@ -252,10 +221,10 @@ class ButtonsSection extends StatelessWidget {
       crossAxisSpacing: 10.ss,
       physics: const NeverScrollableScrollPhysics(),
       children: [
-        DashboardButton(label: ' Wardens', icon: FontAwesomeIcons.userShield),
+        //DashboardButton(label: ' Wardens', icon: FontAwesomeIcons.userShield),
         DashboardButton(label: 'Students', icon: FontAwesomeIcons.userGraduate),
         DashboardButton(label: 'Attendance', icon: FontAwesomeIcons.clipboardList,onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> AttendanceHistory())),),
-        DashboardButton(label: 'Assign Room', icon: FontAwesomeIcons.plusCircle),
+        DashboardButton(label: 'Assign Room', icon: FontAwesomeIcons.plusCircle,onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=> AssignRoom()))),
       ],
     );
   }
@@ -299,97 +268,4 @@ class DashboardButton extends StatelessWidget {
   }
 }
 
-class HostelCard extends StatelessWidget {
-  final String title;
-  final String subtitle;
-  final List<Map<String, dynamic>> stats;
-  final VoidCallback? onTap;
-  HostelCard({required this.title, required this.subtitle, required this.stats,this.onTap});
 
-  @override
-  Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(bottom: 20.ss),
-        padding: EdgeInsets.all(15.ss),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(10.ss),
-          boxShadow: [
-            BoxShadow(
-              color: Colors.black.withOpacity(0.1),
-              blurRadius: 4,
-              offset: Offset(0, 2.ss),
-            ),
-          ],
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(title, style: Theme.of(context).textTheme.bodyMedium),
-                Text(
-                  subtitle,
-                  style: Theme.of(context).textTheme.bodySmall!.copyWith(color: subtitle == 'Girls Hostel' ? CustColor.Pink : CustColor.Blue),
-                ),
-              ],
-            ),
-            SizedBox(height: 10.ss),
-            GridView.count(crossAxisCount: 2,
-              physics: const NeverScrollableScrollPhysics(),
-              shrinkWrap: true,
-              crossAxisSpacing: 10.ss,
-              mainAxisSpacing: 10.ss,
-              childAspectRatio: 2.5,
-              children: stats.map((stat) {
-                return StatCard(
-                  icon: stat['icon'],
-                  label: stat['label'],
-                  value: stat['value'],
-                );
-              }).toList(),
-            )
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class StatCard extends StatelessWidget {
-  final IconData icon;
-  final String label;
-  final String value;
-
-  StatCard({required this.icon, required this.label, required this.value});
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.all(10.ss),
-      decoration: BoxDecoration(
-        color: CustColor.Light_Green,
-        borderRadius: BorderRadius.circular(10.ss),
-      ),
-      child: Row(
-        children: [
-          Expanded(flex:1,child: Icon(icon, size: 24, color: CustColor.Green)),
-          Expanded(
-            flex: 2,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(child: Text(label, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontSize: 14, fontWeight: FontWeight.w500,color: CustColor.Gray))),
-                Expanded(child: Text(value, style: Theme.of(context).textTheme.bodySmall!.copyWith(fontWeight: FontWeight.bold))),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}

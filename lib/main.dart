@@ -5,8 +5,9 @@ import 'package:path_provider/path_provider.dart';
 import 'package:rental_admin_app/screens/dashboard.dart';
 import 'package:rental_admin_app/screens/hostel_floors.dart';
 import 'package:rental_admin_app/screens/login_register_screen.dart';
+import 'package:rental_admin_app/screens/login_screen.dart';
 import 'package:rental_admin_app/screens/profile.dart';
-import 'package:rental_admin_app/screens/room_availability.dart';
+import 'package:rental_admin_app/screens/room_details.dart';
 import 'package:rental_admin_app/utilities/consts.dart';
 import 'package:rental_admin_app/utilities/theme_data.dart';
 import 'package:rental_admin_app/widgets/cust_circular_indicator.dart';
@@ -46,7 +47,7 @@ class MyApp extends StatelessWidget {
               if(snapshot.data!){
                 return Dashboard();
               }else{
-                return LoginRegisterScreen();
+                return LoginScreen();
               }
             }else{
               return Scaffold(body: CustCircularIndicator());

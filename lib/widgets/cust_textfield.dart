@@ -49,6 +49,7 @@ class CustTextField extends  StatelessWidget{
   final VoidCallback? onTap;
   final bool enableSuffix;
   final Function(String)? onChanged;
+  final bool enable;
 
   CustTextField({
     this.onChanged,
@@ -63,6 +64,7 @@ class CustTextField extends  StatelessWidget{
     this.maxLength,
     this.focusNode,
     this.onTap,
+    this.enable = true
   });
 
   @override
@@ -82,6 +84,7 @@ class CustTextField extends  StatelessWidget{
         maxLength: maxLength,
         textInputAction: textInputAction,
         controller: controller,
+        enabled: enable,
         style: GoogleFonts.roboto(
           color: Colors.black,
           fontSize: 16,
@@ -91,8 +94,9 @@ class CustTextField extends  StatelessWidget{
             border: InputBorder.none,
             contentPadding: const EdgeInsets.all(15),
             counterText: '',
+            disabledBorder: const OutlineInputBorder(borderSide: BorderSide(color: CustColor.Gray),borderRadius: BorderRadius.all(Radius.circular(5),),),
             enabledBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)),),
-            focusedBorder: const OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)),),
+            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.all(Radius.circular(5)),),
             prefixIcon: prefixIcon,
             suffixIcon: enableSuffix ? IconButton(onPressed: onTap,icon: Icon(obscureText ? FontAwesomeIcons.eyeSlash : FontAwesomeIcons.eye)) : null,
             labelText: labelText,

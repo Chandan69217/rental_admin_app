@@ -87,18 +87,18 @@ class _SignupScreenState extends State<SignupScreen> with WidgetsBindingObserver
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              const SizedBox(
-                height: 20,
-              ),
+              // const SizedBox(
+              //   height: 20,
+              // ),
               // Description
-              Text(
-                "signed up, you'll gain full access to the admin dashboard where you can monitor your hostels, manage tenant.",
-                textAlign: TextAlign.center,
-                style: GoogleFonts.roboto(
-                  fontSize: 14,
-                  color: CustColor.Gray,
-                ),
-              ),
+              // Text(
+              //   "signed up, you'll gain full access to the admin dashboard where you can monitor your hostels, manage tenant.",
+              //   textAlign: TextAlign.center,
+              //   style: GoogleFonts.roboto(
+              //     fontSize: 14,
+              //     color: CustColor.Gray,
+              //   ),
+              // ),
               const SizedBox(height: 15),
               Expanded(
                 child: PageView(
@@ -262,7 +262,7 @@ class _SignupScreenState extends State<SignupScreen> with WidgetsBindingObserver
             alignment: Alignment.bottomRight,
             children: [CircleAvatar(
               backgroundImage: profile != null ? base64ToImage(profile!):AssetImage('assets/icons/dummy_profile.webp',),
-              radius: 100,
+              radius: 80,
             ), GestureDetector(onTap:_selectProfile ,child: Container(padding: EdgeInsets.all(15.0),decoration: BoxDecoration(color:CustColor.Green,shape: BoxShape.circle),child: Icon( FontAwesomeIcons.camera,color: Colors.white,))),
             ]
           ),
@@ -541,7 +541,7 @@ class _SignupScreenState extends State<SignupScreen> with WidgetsBindingObserver
     });
 
     try{
-      var uri = Uri.parse(Urls.adminRegisterUrl);
+      var uri = Uri.https(Urls.baseUrl,Urls.adminRegisterUrl);
 
       var body = json.encode({
         "hostelAdminName": name,
