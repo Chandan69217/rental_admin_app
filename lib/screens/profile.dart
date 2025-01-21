@@ -4,6 +4,7 @@ import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:rental_admin_app/screens/dashboard.dart';
 import 'package:rental_admin_app/screens/login_register_screen.dart';
+import 'package:rental_admin_app/screens/login_screen.dart';
 import 'package:rental_admin_app/utilities/cust_color.dart';
 import 'package:rental_admin_app/widgets/cust_circular_indicator.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -237,6 +238,6 @@ class _ProfileState extends State<Profile> {
     setState(() {
       _isLoading = false;
     });
-    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LoginRegisterScreen()), (route)=>false);
+    Navigator.pushAndRemoveUntil(context, MaterialPageRoute(builder: (context)=>LoginScreen()), (route)=>false);
   }
 }

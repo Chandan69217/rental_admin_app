@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/dashboard_data.dart';
 import '../utilities/cust_color.dart';
 import '../widgets/cust_circular_indicator.dart';
@@ -14,24 +15,54 @@ class HomeScreen extends StatefulWidget{
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  final controller = PageController(viewportFraction: 1, keepPage: true);
   @override
   Widget build(BuildContext context) {
     return
-      Padding(
-      padding: EdgeInsets.only(left:  20,right: 20,top: 20),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          // ButtonsSection(),
-          Text('Dashboard', style: Theme.of(context).textTheme.bodyLarge),
-          SizedBox(height: 10),
-          HostelExpensesCard(hostelName: 'Sweta Girls Hostel',monthlyExpenses: '1200',totalExpenses: '24000',remainingBudget: '2345',),
-          SizedBox(height: 20),
-          Text('Hostels', style: Theme.of(context).textTheme.bodyLarge),
-          SizedBox(height: 10),
-          Expanded(
-            child: DashboardData.hostels == null ? Center(child: CustCircularIndicator(),):
-            ListView.builder(itemCount: DashboardData.hostels != null ? DashboardData.hostels!.length:0,
+      SingleChildScrollView(
+        child: Padding(
+        padding: EdgeInsets.only(left:  20,right: 20,top: 20),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // ButtonsSection(),
+            Text('Dashboard', style: Theme.of(context).textTheme.bodyLarge),
+            ConstrainedBox(
+              constraints: BoxConstraints(maxHeight: 170),
+              child: PageView.builder(itemCount: 4,
+                controller: controller,
+                itemBuilder: (BuildContext context, int index) {
+                return HostelExpensesCard(hostelName: 'Sweta Girls Hostel',monthlyExpenses: '1200',totalExpenses: '24000',remainingBudget: '2345',);
+              },),
+            ),
+        
+            const SizedBox(height: 8,),
+            Align(
+              alignment: Alignment.center,
+              child: SmoothPageIndicator(
+                controller: controller,
+                count: 4,
+                effect: const WormEffect(
+                  dotHeight: 6,
+                  dotWidth: 6,
+                  dotColor: CustColor.Gray,
+                  activeDotColor: CustColor.Green,
+                  type: WormType.thinUnderground,
+                ),
+              ),
+            ),
+            // child: SizedBox(height: 10)),
+            SizedBox(height: 8,),
+            _PaymentCard(),
+
+            SizedBox(height: 20),
+            Text('Hostels', style: Theme.of(context).textTheme.bodyLarge),
+            SizedBox(height: 10),
+            DashboardData.hostels == null ? Center(child: CustCircularIndicator(),):
+            ListView.builder(
+              shrinkWrap: true,
+                physics: NeverScrollableScrollPhysics(),
+                itemCount: DashboardData.hostels != null ? DashboardData.hostels!.length:0,
                 itemBuilder: (context,index){
                   return HostelCard(
                     onTap: ()=>Navigator.of(context).push(MaterialPageRoute(builder: (context)=>HostelFloors(title: DashboardData.hostels![index]['hostelName'],subTitle: DashboardData.hostels![index]['hostelType'],hostel_id:DashboardData.hostels![index]['id']??0,))),
@@ -46,10 +77,10 @@ class _HomeScreenState extends State<HomeScreen> {
                   );
                 }
             ),
-          ),
-        ],
-      ),
-    );
+          ],
+        ),
+            ),
+      );
   }
 
 }
@@ -163,16 +194,17 @@ class HostelExpensesCard extends StatelessWidget {
     required this.remainingBudget,
   });
 
+
   @override
   Widget build(BuildContext context) {
     return Card(
-      elevation: 5,
+      elevation: 3,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(15),
+        borderRadius: BorderRadius.circular(10),
       ),
       color: Colors.white,
       child: Padding(
-        padding: const EdgeInsets.all(16.0),
+        padding: const EdgeInsets.symmetric(horizontal: 10,vertical: 10),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -184,7 +216,7 @@ class HostelExpensesCard extends StatelessWidget {
                 color: Colors.black87,
               ),
             ),
-            SizedBox(height: 8),
+            SizedBox(height: 6),
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -262,6 +294,74 @@ class HostelExpensesCard extends StatelessWidget {
   }
 }
 
+class _PaymentCard extends StatelessWidget{
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: MediaQuery.of(context).size.width,
+      padding: EdgeInsets.symmetric(
+          horizontal: 24, vertical: 10),
+      decoration: BoxDecoration(
+          shape: BoxShape.rectangle,
+          boxShadow: [
+            // BoxShadow(
+            //   color: CustColor.Gray,
+            //   blurRadius: 1,
+            //   spreadRadius: 5,
+            // ),
+          ],
+          borderRadius: BorderRadius.circular(14),
+          color: CustColor.Light_Green
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Text('Check Payments',
+              style: Theme.of(context)
+                  .textTheme
+                  .bodyMedium!
+          ),
+          // Expanded(
+          //   child: Row(
+          //     crossAxisAlignment: CrossAxisAlignment.center,
+          //     children: [
+          //       // Image.asset(
+          //       //   'assets/icons/rupee-icon.webp',
+          //       //   width: 12,
+          //       //   height: 10,
+          //       //   fit: BoxFit.cover,
+          //       //   color: Colors.white,
+          //       // ),
+          //       // Text(
+          //       //   '2300.00',
+          //       //   style: Theme.of(context)
+          //       //       .textTheme
+          //       //       .bodyMedium!
+          //       //       .copyWith(
+          //       //       color: Colors.white,
+          //       //       fontSize: 10),
+          //       // )
+          //     ],
+          //   ),
+          // ),
+          SizedBox(
+            height: 35,
+            child: ElevatedButton(
+              style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(CustColor.Green)),
+                onPressed: (){},
+                    // () {Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FeeScreen(enableBack: true,)));},
+                child: const Text(
+                  'Check',
+                  style:
+                  TextStyle(color: Colors.white),
+                )),
+          )
+        ],
+      ),
+    );
+  }
+}
 
 
 // Widget for Stats
@@ -278,7 +378,7 @@ class StatBox extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      padding: const EdgeInsets.all(10),
+      padding: const EdgeInsets.all(8),
       decoration: BoxDecoration(
         color: CustColor.Light_Green,
         borderRadius: BorderRadius.circular(10),
@@ -286,22 +386,22 @@ class StatBox extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container( 
-            padding: EdgeInsets.symmetric(horizontal: 18,vertical: 8),
+          Container(
+            padding: EdgeInsets.symmetric(horizontal: 10,vertical: 4),
               decoration: BoxDecoration(color: Colors.black12,
                 borderRadius: BorderRadius.circular(20)
               ),
-              
-              child: Image.asset('assets/icons/money.webp',width: 40,height: 40,)
+
+              child: Image.asset('assets/icons/money.webp',width: 35,height: 35,)
           ),
           Row(
             children: [
-              Icon(FontAwesomeIcons.indianRupeeSign,size: 25,color: CustColor.Blue_shade2,),
+              Icon(FontAwesomeIcons.indianRupeeSign,size: 14,color: CustColor.Blue_shade2,),
               Text(
                 title,
                 style: const TextStyle(
                   color: CustColor.Blue_shade2,
-                  fontSize: 28,
+                  fontSize: 18,
                   fontWeight: FontWeight.bold,
                 ),
               ),

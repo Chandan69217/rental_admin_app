@@ -247,6 +247,8 @@ class _LoginScreenState extends State<LoginScreen> with WidgetsBindingObserver {
             Consts.Email, rawData['data']['user']['hostelAdminEmail']);
         pref.setString(
             Consts.Admin_role, rawData['data']['user']['hostelAdminRole']);
+        pref.setString(
+            Consts.Admin_User_Id, rawData['data']['user']['id'].toString());
         Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(builder: (context) => Dashboard()),
           (route) => false,
