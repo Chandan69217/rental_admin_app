@@ -67,19 +67,19 @@ class _DashboardState extends State<Dashboard> {
       if(responses[0].statusCode == 200 && responses[1].statusCode == 200){
         final profileData = json.decode(responses[0].body) as Map<String,dynamic>;
         final hostelData = json.decode(responses[1].body) as Map<String,dynamic>;
-        await storeUserData(to: 'dashboardBox', key: 'userProfile',userData: profileData['data']['result']);
-        await storeUserData(to: 'dashboardBox', key: 'hostelList',userData: hostelData['data']);
+        await storeUserData(key: 'userProfile',userData: profileData['data']['result']);
+        await storeUserData(key: 'hostelList',userData: hostelData['data']);
         setState(() {});
       }else{
         if(responses[0].statusCode == 200){
           final profileBody = json.decode(responses[0].body) as Map<String,dynamic>;
-          await storeUserData(to: 'dashboardBox',key: 'userProfile',userData: profileBody['data']['result']);
+          await storeUserData(key: 'userProfile',userData: profileBody['data']['result']);
         }else {
           print('Profile API failed with status: ${responses[0].statusCode}, Reason: ${responses[0].reasonPhrase}');
         }
         if(responses[1].statusCode == 200){
           final hostelBody = json.decode(responses[1].body) as Map<String,dynamic>;
-          await storeUserData(to: 'dashboardBox', key: 'hostelList',userData: hostelBody['data']);
+          await storeUserData(key: 'hostelList',userData: hostelBody['data']);
         }else{
           print('Hostel List API failed with status: ${responses[1].statusCode}, Reason: ${responses[1].reasonPhrase}');
         }
@@ -95,7 +95,7 @@ class _DashboardState extends State<Dashboard> {
     var pref = await SharedPreferences.getInstance();
     DashboardData.token = pref.getString(Consts.Token);
     try {
-      var cachedProfileData = await getUserData(from: 'dashboardBox', key: 'userProfile');
+      var cachedProfileData = await getUserData(key: 'userProfile');
       if (cachedProfileData != null) {
         DashboardData.profile = base64ToImage(cachedProfileData['hostelAdminProfileImage']);
         DashboardData.Name = cachedProfileData['hostelAdminName'];
@@ -108,7 +108,7 @@ class _DashboardState extends State<Dashboard> {
         print('Error: cachedHostelData is null or not a Map<String, dynamic>.');
       }
 
-      var cachedHostelData = await getUserData(from: 'dashboardBox', key: 'hostelList');
+      var cachedHostelData = await getUserData(key: 'hostelList');
       if (cachedHostelData != null) {
         var hostelList = cachedHostelData['hostelList'];
         if (hostelList is List) {
