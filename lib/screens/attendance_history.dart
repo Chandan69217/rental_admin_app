@@ -376,6 +376,59 @@ class _AttendanceHistoryState extends State<AttendanceHistory>
                             mainAxisAlignment: MainAxisAlignment.start,
                             children: [
                               Icon(
+                                FontAwesomeIcons.hotel, // Replace with your desired icon
+                                color: Colors.black,
+                                size: 18.ss,
+                              ),
+                              SizedBox(width: 10.ss),
+                              DropdownButtonHideUnderline(
+                                child: Expanded(
+                                  child: DropdownButton<int>(
+                                      icon: Icon(
+                                        Icons.keyboard_arrow_down_rounded,
+                                        size: 18.ss,
+                                      ),
+                                      hint: Text('Select hostel'),
+                                      iconEnabledColor: Colors.black,
+                                      // menuWidth: 80.ss,
+                                      dropdownColor: CustColor.Background,
+                                      isExpanded: true,
+                                      borderRadius: BorderRadius.circular(6.ss),
+                                      value: _hostelSelectedId,
+                                      style: TextStyle(fontSize: 14,color: Colors.black,overflow: TextOverflow.ellipsis,),
+                                      items:snapshot.data!.map((value) {
+                                        return DropdownMenuItem<int>(
+                                          value: value['id'],
+                                          child: Text(value['hostelName'] ?? 'Unknown Hostel'),
+                                        );
+                                      }).toList(),
+                                      onChanged: (value) async{
+                                        _hostelSelectedId = value!;
+                                        if(_hostelSelectedId!=null){
+                                          _getFloorNameFromAPI(_hostelSelectedId!);
+                                        }
+                                        setState((){});
+                                      }),
+                                ),
+                              ),
+                            ],
+                          )),
+                    ),
+                    SizedBox(width: 10.ss),
+                    Expanded(
+                      child: Container(
+                          height: 45.ss,
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 20.ss,
+                          ),
+                          decoration: BoxDecoration(
+                              shape: BoxShape.rectangle,
+                              color: CustColor.Background,
+                              borderRadius: BorderRadius.circular(6.ss)),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Icon(
                                 FontAwesomeIcons.layerGroup, // Replace with your desired icon
                                 color: Colors.black,
                                 size: 18.ss,
@@ -409,59 +462,6 @@ class _AttendanceHistoryState extends State<AttendanceHistory>
                                             _getAttendanceList(floorId: _floorSelectedId!, hostelId: _hostelSelectedId!);
                                           }
                                         });
-                                      }),
-                                ),
-                              ),
-                            ],
-                          )),
-                    ),
-                    SizedBox(width: 10.ss),
-                    Expanded(
-                      child: Container(
-                          height: 45.ss,
-                          padding: EdgeInsets.symmetric(
-                            horizontal: 20.ss,
-                          ),
-                          decoration: BoxDecoration(
-                              shape: BoxShape.rectangle,
-                              color: CustColor.Background,
-                              borderRadius: BorderRadius.circular(6.ss)),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.start,
-                            children: [
-                              Icon(
-                                FontAwesomeIcons.hotel, // Replace with your desired icon
-                                color: Colors.black,
-                                size: 18.ss,
-                              ),
-                              SizedBox(width: 10.ss),
-                              DropdownButtonHideUnderline(
-                                child: Expanded(
-                                  child: DropdownButton<int>(
-                                      icon: Icon(
-                                        Icons.keyboard_arrow_down_rounded,
-                                        size: 18.ss,
-                                      ),
-                                      hint: Text('Select hostel'),
-                                      iconEnabledColor: Colors.black,
-                                      // menuWidth: 80.ss,
-                                      dropdownColor: CustColor.Background,
-                                      isExpanded: true,
-                                      borderRadius: BorderRadius.circular(6.ss),
-                                      value: _hostelSelectedId,
-                                      style: TextStyle(fontSize: 14,color: Colors.black,overflow: TextOverflow.ellipsis,),
-                                      items:snapshot.data!.map((value) {
-                                        return DropdownMenuItem<int>(
-                                          value: value['id'],
-                                          child: Text(value['hostelName'] ?? 'Unknown Hostel'),
-                                        );
-                                      }).toList(),
-                                      onChanged: (value) async{
-                                        _hostelSelectedId = value!;
-                                        if(_hostelSelectedId!=null){
-                                          _getFloorNameFromAPI(_hostelSelectedId!);
-                                        }
-                                        setState((){});
                                       }),
                                 ),
                               ),

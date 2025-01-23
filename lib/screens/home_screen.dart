@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:hive/hive.dart';
+import 'package:rental_admin_app/screens/demand_list_screen.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 import '../models/dashboard_data.dart';
 import '../utilities/cust_color.dart';
@@ -349,7 +350,7 @@ class _PaymentCard extends StatelessWidget{
             height: 35,
             child: ElevatedButton(
               style: ButtonStyle(backgroundColor: WidgetStatePropertyAll(CustColor.Green)),
-                onPressed: (){},
+                onPressed: ()=> Navigator.of(context).push(MaterialPageRoute(builder: (context)=>DemandListScreen())),
                     // () {Navigator.of(context).push(MaterialPageRoute(builder: (context)=> FeeScreen(enableBack: true,)));},
                 child: const Text(
                   'Check',
